@@ -2,23 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Security.Cryptography;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
     //SINGLETON
     public static GameManager Instance;
     //UI ELEMENTS
+    public TextMeshProUGUI scoreUI;
+    public TextMeshProUGUI comboUI;
     public TextMeshProUGUI timerUI;
     public TextMeshProUGUI countdown;
     public TextMeshProUGUI hitIndicator;
+    public Transform hitLine;
     //TIME VARIABLES
     private int seconds;
     private int minutes;
     private double startTime;
     private double currentTime;
+    private double targetTime;
     private bool started;
-    //INPUT VARIABLES
-    private List<GameObject> fallingInputList;
+
+    //GAME VARIABLES
+    private int score = 0;
+    private int scoreIncrement = 1;
+    private int scoreDecrementIfMiss = 3;
+    private int scoreDecrementIfWrong = 5;
+    private int combo = 0;
+    private float bpm = 150;
+    private float scrollSpeed;
+    private float inputRange = 0.25f;
+    //FALLING INPUT VARIABLES
+    public Transform inputGroup;
+    private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
+    private List<SpriteRenderer> squareList = new List<SpriteRenderer>();
+    private List<SpriteRenderer> triangleList = new List<SpriteRenderer>();
+    private List<SpriteRenderer> diamondList = new List<SpriteRenderer>();
+    private int circleListIndex = 0;
+    private int squareListIndex = 0;
+    private int triangleListIndex = 0;
+    private int diamondListIndex = 0;
+
     
     //TIMER FUNCTION
     void CalculateTime()
@@ -33,6 +58,80 @@ public class GameManager : MonoBehaviour
         }
         timerUI.text = minutes.ToString("00") + ":" + seconds.ToString("00");
     }
+    //NOTE SCROLL FUNCTION
+    private void ScrollNotes()
+    {
+        inputGroup.Translate(0,-scrollSpeed * Time.deltaTime,0);
+    }
+    private void CheckIfMusicIsDone()
+    {
+        
+    }
+    //POINTS FUNCTIONS
+    public void IncreaseScore(int increment)
+    {
+        score += increment + combo/10;
+        scoreUI.text = "Score:" + score; 
+    }
+
+    public void DecreaseScore(int decrement)
+    {
+        score -= decrement;
+        scoreUI.text = "Score:" + score;
+    }
+    public void IncreaseCombo()
+    {
+        combo++;
+    }
+
+    public void ResetCombo()
+    {
+        combo = 0;
+    }
+    
+    //FALLING INPUTS MANAGEMENT FUNCTIONS
+    public Color AddTransparencyToUsedNote(Color color, int alpha)
+    {
+        return color = new Color(color.r, color.g, color.b, alpha);
+    }
+    //CIRCLE INPUT WAS PRESSED
+    public void CirclePressed()
+    {
+        //CHECK IF INPUT IS VERY ACCURATE
+        if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        {
+            IncreaseScore(scoreIncrement*2);
+            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 175);
+            circleListIndex++;
+        }
+        //CHECK IF INPUT IS NOT AS ACCURATE
+        else if (Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        {
+            IncreaseScore(scoreIncrement);
+            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 115);
+            circleListIndex++;
+        }
+        //ELSE IF INPUT WAS TOO EARLY
+        else
+        {
+            DecreaseScore(scoreDecrementIfWrong);
+        }
+    }
+    //IF CIRCLE NOTE WAS MISSED
+    public void MissedCircle()
+    {
+        if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) > inputRange)
+        {
+            DecreaseScore(scoreDecrementIfMiss);
+            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 50);
+            circleListIndex++;
+        }
+    }
+    //SQUARE LIST
+
+    //TRIANGLE LIST
+
+    //DIAMOND LIST
 
     //START OF GAME COUNTDOWN
     private IEnumerator Countdown()
@@ -61,10 +160,34 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         else
             Instance = this;
+        for(int i = 0; i < inputGroup.childCount; i++)
+        {
+            FallingInputController fic = inputGroup.GetChild(i).GetComponent<FallingInputController>();
+            print(fic.fallingInput.inputName);
+            switch(fic.fallingInput.inputName)
+            {
+                case "Circle":
+                    circleList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
+                    break;
+                case "Square":
+                    squareList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
+                    break;
+                case "Triangle":
+                    triangleList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
+                    break;
+                case "Diamond":
+                    diamondList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
+                    break;
+                default:
+                    print("ERROR: Invalid falling input name at Awake function in GameManager");
+                    break;
+            }
+        }
     }
 
     void Start()
     {
+        scrollSpeed = bpm / 60;
         countdown.text = "";
         hitIndicator.text = "";
         StartCoroutine(Countdown());
@@ -75,6 +198,7 @@ public class GameManager : MonoBehaviour
         if(started)
         {
             CalculateTime();
+            ScrollNotes();
         }
     }
 }

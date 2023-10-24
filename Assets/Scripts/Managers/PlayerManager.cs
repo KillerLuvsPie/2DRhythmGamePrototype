@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    public PlayerManager Instance;
     //HIT MARKERS
     public SpriteRenderer circleHitMarker;
     public SpriteRenderer squareHitMarker;
@@ -16,9 +17,12 @@ public class PlayerManager : MonoBehaviour
     private Color yellow = new Color(1,1,0,1);
     private Color white = new Color(1,1,1,1);
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        if(Instance != null && Instance != this)
+            Destroy(this);
+        else
+            Instance = this;
     }
 
     // Update is called once per frame
