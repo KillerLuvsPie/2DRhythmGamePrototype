@@ -21,7 +21,7 @@ public class FallingInputController : MonoBehaviour
     }
     void Update()
     {
-        /*if(fallingInput.inputName == "Circle")
+        if(fallingInput.inputName == "Circle")
             GameManager.Instance.MissedCircle();
         /*else if(fallingInput.name == "Square")
             GameManager.Instance.MissedSquare();

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8879c5fc489fb14489035d572dceb94e, type: 3}
   m_Name: Circle
   m_EditorClassIdentifier: 
+  inputName: Circle
   sprite: {fileID: 21300000, guid: e32b2f4a20648ae4d970e5c6c4c5c58e, type: 3}
   color: {r: 1, g: 0, b: 0, a: 1}
   scaleAdjust: {x: 1, y: 1, z: 1}
-  inputTime: 0

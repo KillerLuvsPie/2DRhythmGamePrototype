@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8879c5fc489fb14489035d572dceb94e, type: 3}
   m_Name: Diamond
   m_EditorClassIdentifier: 
+  inputName: Diamond
   sprite: {fileID: 21300000, guid: b1d79f40807ef214db964806ba55a3e4, type: 3}
   color: {r: 1, g: 1, b: 0, a: 1}
   scaleAdjust: {x: 1, y: 2, z: 1}
-  inputTime: 0

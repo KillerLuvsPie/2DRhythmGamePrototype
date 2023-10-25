@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     private int combo = 0;
     private float bpm = 150;
     private float scrollSpeed;
-    private float inputRange = 0.25f;
+    private float inputRange = 0.50f;
     //FALLING INPUT VARIABLES
     public Transform inputGroup;
     private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     }
     
     //FALLING INPUTS MANAGEMENT FUNCTIONS
-    public Color AddTransparencyToUsedNote(Color color, int alpha)
+    public Color AddTransparencyToUsedNote(Color color, float alpha)
     {
         return color = new Color(color.r, color.g, color.b, alpha);
     }
@@ -101,14 +101,16 @@ public class GameManager : MonoBehaviour
         if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             IncreaseScore(scoreIncrement*2);
-            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 175);
+            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 0.70f);
+            circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
             circleListIndex++;
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
         else if (Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
         {
             IncreaseScore(scoreIncrement);
-            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 115);
+            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 0.45f);
+            circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
             circleListIndex++;
         }
         //ELSE IF INPUT WAS TOO EARLY
@@ -120,10 +122,11 @@ public class GameManager : MonoBehaviour
     //IF CIRCLE NOTE WAS MISSED
     public void MissedCircle()
     {
-        if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) > inputRange)
+        if(circleList[circleListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
             DecreaseScore(scoreDecrementIfMiss);
-            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 50);
+            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 0.20f);
+            circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
             circleListIndex++;
         }
     }
@@ -163,7 +166,6 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < inputGroup.childCount; i++)
         {
             FallingInputController fic = inputGroup.GetChild(i).GetComponent<FallingInputController>();
-            print(fic.fallingInput.inputName);
             switch(fic.fallingInput.inputName)
             {
                 case "Circle":
@@ -183,6 +185,22 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+        for(int i = 0; i < circleList.Count; i++)
+        {
+            print("Circle List, Pos" + i + ":" + circleList[circleListIndex]);
+        }
+        for(int i = 0; i < squareList.Count; i++)
+        {
+            print(squareList[squareListIndex]);
+        }
+        for(int i = 0; i < triangleList.Count; i++)
+        {
+            print(triangleList[triangleListIndex]);
+        }
+        for(int i = 0; i < diamondList.Count; i++)
+        {
+            print(diamondList[diamondListIndex]);
+        }
     }
 
     void Start()
@@ -191,6 +209,7 @@ public class GameManager : MonoBehaviour
         countdown.text = "";
         hitIndicator.text = "";
         StartCoroutine(Countdown());
+        circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 50);
     }
     // Update is called once per frame
     void Update()
