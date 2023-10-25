@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     private double startTime;
     private double currentTime;
     private double targetTime;
-    private bool started;
+    public bool started;
 
     //GAME VARIABLES
     private int score = 0;
@@ -32,7 +32,11 @@ public class GameManager : MonoBehaviour
     private int combo = 0;
     private float bpm = 150;
     private float scrollSpeed;
-    private float inputRange = 0.50f;
+    private float inputRange = 0.25f;
+    private float perfectHitAlpha = 0f;
+    private float normalHitAlpha = 0f;
+    private float missedAlpha = 0.1f;
+
     //FALLING INPUT VARIABLES
     public Transform inputGroup;
     private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
@@ -43,7 +47,7 @@ public class GameManager : MonoBehaviour
     private int squareListIndex = 0;
     private int triangleListIndex = 0;
     private int diamondListIndex = 0;
-
+    public SpriteRenderer[] LastNotes;
     
     //TIMER FUNCTION
     void CalculateTime()
@@ -82,11 +86,13 @@ public class GameManager : MonoBehaviour
     public void IncreaseCombo()
     {
         combo++;
+        comboUI.text = "Combo:" + combo;
     }
 
     public void ResetCombo()
     {
         combo = 0;
+        comboUI.text = "Combo:" + combo;
     }
     
     //FALLING NOTE LISTS MANAGEMENT FUNCTIONS
@@ -95,15 +101,37 @@ public class GameManager : MonoBehaviour
         return color = new Color(color.r, color.g, color.b, alpha);
     }
 
+    private void ShowHitMessage(float distance)
+    {
+        if(Mathf.Abs(distance) <= Mathf.Lerp(0, inputRange, 0.5f))
+            hitIndicator.text = (-distance).ToString("0.000") + "\nNice!";
+        else if(Mathf.Abs(distance) <= inputRange)
+            hitIndicator.text = (-distance).ToString("0.000") + "\nOk";
+        else
+            hitIndicator.text = "\nMiss";
+    }
+    private void ShowEarlyHitMessage()
+    {
+        hitIndicator.text = "Too\nEarly";
+    }
     private void ProcessNoteList(List<SpriteRenderer> noteList, int inputIndex, bool addScore, int score, int scoreMultiplier, float alpha)
     {
         if(addScore)
+        {
             IncreaseScore(score * scoreMultiplier);
+            IncreaseCombo();
+        }
         else
+        {
             DecreaseScore(score * scoreMultiplier);
+            ResetCombo();
+        }
         noteList[inputIndex].color = AddTransparencyToUsedNote(noteList[inputIndex].color, alpha);
         noteList[inputIndex].GetComponent<FallingInputController>().enabled = false;
-        inputIndex++;
+        float distance = noteList[inputIndex].transform.position.y - hitLine.position.y;
+        ShowHitMessage(distance);
+        if(inputIndex < noteList.Count-1)
+            inputIndex++;
     }
 
     //----------CIRCLE LIST----------
@@ -114,18 +142,20 @@ public class GameManager : MonoBehaviour
         if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 2, /*Alpha change*/ 0.70f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2, /*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
         else if (Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
         {
             ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
         //ELSE IF INPUT WAS TOO EARLY
         else
         {
+            ShowEarlyHitMessage();
             DecreaseScore(scoreDecrementIfWrong);
+            ResetCombo();
         }
     }
     //IF CIRCLE NOTE WAS MISSED
@@ -133,8 +163,10 @@ public class GameManager : MonoBehaviour
     {
         if(circleList[circleListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
+
             ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/false,
-            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
+            
         }
     }
 
@@ -146,18 +178,20 @@ public class GameManager : MonoBehaviour
         if(Mathf.Abs(squareList[squareListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*List:*/squareList, /*ListIndex:*/squareListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ 0.70f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
         else if (Mathf.Abs(squareList[squareListIndex].transform.position.y - hitLine.position.y) <= inputRange)
         {
             ProcessNoteList(/*List:*/squareList, /*ListIndex:*/squareListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
         //ELSE IF INPUT WAS TOO EARLY
         else
         {
+            ShowEarlyHitMessage();
             DecreaseScore(scoreDecrementIfWrong);
+            ResetCombo();
         }
     }
     //IF SQUARE NOTE WAS MISSED
@@ -166,7 +200,7 @@ public class GameManager : MonoBehaviour
         if(squareList[squareListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
             ProcessNoteList(/*List:*/squareList, /*ListIndex:*/squareListIndex, /*Add score?*/false,
-            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
     }
 
@@ -178,18 +212,20 @@ public class GameManager : MonoBehaviour
         if(Mathf.Abs(triangleList[triangleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*List:*/triangleList, /*ListIndex:*/triangleListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ 0.70f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
         else if (Mathf.Abs(triangleList[triangleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
         {
             ProcessNoteList(/*List:*/triangleList, /*ListIndex:*/triangleListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
         //ELSE IF INPUT WAS TOO EARLY
         else
         {
+            ShowEarlyHitMessage();
             DecreaseScore(scoreDecrementIfWrong);
+            ResetCombo();
         }
     }
     //IF TRIANGLE NOTE WAS MISSED
@@ -198,7 +234,7 @@ public class GameManager : MonoBehaviour
         if(triangleList[triangleListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
             ProcessNoteList(/*List:*/triangleList, /*ListIndex:*/triangleListIndex, /*Add score?*/false,
-            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
     }
     
@@ -210,18 +246,20 @@ public class GameManager : MonoBehaviour
         if(Mathf.Abs(diamondList[diamondListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*List:*/diamondList, /*ListIndex:*/diamondListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ 0.70f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
         else if (Mathf.Abs(diamondList[diamondListIndex].transform.position.y - hitLine.position.y) <= inputRange)
         {
             ProcessNoteList(/*List:*/diamondList, /*ListIndex:*/diamondListIndex, /*Add score?*/true,
-            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
         //ELSE IF INPUT WAS TOO EARLY
         else
         {
+            ShowEarlyHitMessage();
             DecreaseScore(scoreDecrementIfWrong);
+            ResetCombo();
         }
     }
     //IF TRIANGLE NOTE WAS MISSED
@@ -230,7 +268,7 @@ public class GameManager : MonoBehaviour
         if(diamondList[diamondListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
             ProcessNoteList(/*List:*/diamondList, /*ListIndex:*/diamondListIndex, /*Add score?*/false,
-            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
     }
 
@@ -283,21 +321,25 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+        circleList.Add(LastNotes[0]);
+        squareList.Add(LastNotes[1]);
+        triangleList.Add(LastNotes[2]);
+        diamondList.Add(LastNotes[3]);
         for(int i = 0; i < circleList.Count; i++)
         {
-            print("Circle List, Pos" + i + ":" + circleList[circleListIndex]);
+            print("Circle List, Pos " + i + ": " + circleList[i].name);
         }
         for(int i = 0; i < squareList.Count; i++)
         {
-            print(squareList[squareListIndex]);
+            print("Square List, Pos " + i + ": " + squareList[i].name);
         }
         for(int i = 0; i < triangleList.Count; i++)
         {
-            print(triangleList[triangleListIndex]);
+            print("Triangle List, Pos " + i + ": " + triangleList[i].name);
         }
         for(int i = 0; i < diamondList.Count; i++)
         {
-            print(diamondList[diamondListIndex]);
+            print("Diamond List, Pos " + i + ": " + diamondList[i].name);
         }
     }
 

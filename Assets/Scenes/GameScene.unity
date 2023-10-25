@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!212 &82036930 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8512126168262004116, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &285629775
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +178,13 @@ MonoBehaviour:
   countdown: {fileID: 1145412562}
   hitIndicator: {fileID: 1570433846}
   hitLine: {fileID: 1561901930}
+  started: 0
   inputGroup: {fileID: 1919804475}
+  LastNotes:
+  - {fileID: 1705816279}
+  - {fileID: 1879068996}
+  - {fileID: 82036930}
+  - {fileID: 1191924074}
 --- !u!212 &477244304 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 215150492778718971, guid: 822f096cf05c6634b912018c1973905e, type: 3}
@@ -215,7 +226,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1060,6 +1071,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145412560}
   m_CullTransparentMesh: 1
+--- !u!212 &1191924074 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1222368844591083031, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1328961567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,6 +1289,16 @@ CanvasRenderer:
 --- !u!212 &1690126613 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1202462514015018572, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &1705816279 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3054082622367670835, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &1879068996 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3295796624198662263, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1900426823

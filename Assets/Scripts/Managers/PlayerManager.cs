@@ -13,9 +13,13 @@ public class PlayerManager : MonoBehaviour
     public SpriteRenderer diamondHitMarker;
     //HIT MARKER COLORS
     private Color red = new Color(1,0,0,1);
+    private Color darkRed = new Color(0.25f,0,0,1);
     private Color blue = new Color(0,0,1,1);
+    private Color darkBlue = new Color(0,0,0.25f,1);
     private Color green = new Color(0,1,0,1);
+    private Color darkGreen = new Color(0,0.25f,0,1);
     private Color yellow = new Color(1,1,0,1);
+    private Color darkYellow = new Color(0.25f,0.25f,0,1);
     private Color white = new Color(1,1,1,1);
     //CONTROL VARIABLES
     private bool isCircleHeld = false;
@@ -30,64 +34,73 @@ public class PlayerManager : MonoBehaviour
         else
             Instance = this;
     }
-    
+    void Start()
+    {
+        circleHitMarker.color = darkRed;
+        squareHitMarker.color = darkBlue;
+        triangleHitMarker.color = darkGreen;
+        diamondHitMarker.color = darkYellow;
+    }
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
+        if(GameManager.Instance.started)
         {
-            circleHitMarker.color = red;
-            if(isCircleHeld == false)
+            if(Input.GetKeyDown(KeyCode.A))
             {
-                isCircleHeld = true;
-                GameManager.Instance.CirclePressed();
+                circleHitMarker.color = red;
+                if(isCircleHeld == false)
+                {
+                    isCircleHeld = true;
+                    GameManager.Instance.CirclePressed();
+                }
             }
-        }
-        else if(Input.GetKeyUp(KeyCode.A))
-        {
-            circleHitMarker.color = white;
-            isCircleHeld = false;
-        }
-        if(Input.GetKeyDown(KeyCode.S))
-        {
-            squareHitMarker.color = blue;
-            if(isSquareHeld == false)
+            else if(Input.GetKeyUp(KeyCode.A))
             {
-                isSquareHeld = true;
-                GameManager.Instance.SquarePressed();
+                circleHitMarker.color = darkRed;
+                isCircleHeld = false;
             }
-        }
-        else if(Input.GetKeyUp(KeyCode.S))
-        {
-            squareHitMarker.color = white;
-            isSquareHeld = false;
-        }
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            triangleHitMarker.color = green;
-            if(isTriangleHeld == false)
+            if(Input.GetKeyDown(KeyCode.S))
             {
-                isTriangleHeld = true;
-                GameManager.Instance.TrianglePressed();
+                squareHitMarker.color = blue;
+                if(isSquareHeld == false)
+                {
+                    isSquareHeld = true;
+                    GameManager.Instance.SquarePressed();
+                }
             }
-        }
-        else if(Input.GetKeyUp(KeyCode.G))
-        {
-            triangleHitMarker.color = white;
-            isTriangleHeld = false;
-        }
-        if(Input.GetKeyDown(KeyCode.H))
-        {
-            diamondHitMarker.color = yellow;
-            if(isDiamondHeld == false)
+            else if(Input.GetKeyUp(KeyCode.S))
             {
-                isDiamondHeld = true;
-                GameManager.Instance.DiamondPressed();
+                squareHitMarker.color = darkBlue;
+                isSquareHeld = false;
             }
-        }
-        else if(Input.GetKeyUp(KeyCode.H))
-        {
-            diamondHitMarker.color = white;
-            isDiamondHeld = false;
+            if(Input.GetKeyDown(KeyCode.G))
+            {
+                triangleHitMarker.color = green;
+                if(isTriangleHeld == false)
+                {
+                    isTriangleHeld = true;
+                    GameManager.Instance.TrianglePressed();
+                }
+            }
+            else if(Input.GetKeyUp(KeyCode.G))
+            {
+                triangleHitMarker.color = darkGreen;
+                isTriangleHeld = false;
+            }
+            if(Input.GetKeyDown(KeyCode.H))
+            {
+                diamondHitMarker.color = yellow;
+                if(isDiamondHeld == false)
+                {
+                    isDiamondHeld = true;
+                    GameManager.Instance.DiamondPressed();
+                }
+            }
+            else if(Input.GetKeyUp(KeyCode.H))
+            {
+                diamondHitMarker.color = darkYellow;
+                isDiamondHeld = false;
+            }
         }
     }
 }
