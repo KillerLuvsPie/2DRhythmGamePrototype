@@ -53,7 +53,7 @@ public class PlayerManager : MonoBehaviour
             if(isSquareHeld == false)
             {
                 isSquareHeld = true;
-                GameManager.Instance.CirclePressed();
+                GameManager.Instance.SquarePressed();
             }
         }
         else if(Input.GetKeyUp(KeyCode.S))
@@ -67,7 +67,7 @@ public class PlayerManager : MonoBehaviour
             if(isTriangleHeld == false)
             {
                 isTriangleHeld = true;
-                GameManager.Instance.CirclePressed();
+                GameManager.Instance.TrianglePressed();
             }
         }
         else if(Input.GetKeyUp(KeyCode.G))
@@ -81,7 +81,7 @@ public class PlayerManager : MonoBehaviour
             if(isDiamondHeld == false)
             {
                 isDiamondHeld = true;
-                GameManager.Instance.CirclePressed();
+                GameManager.Instance.DiamondPressed();
             }
         }
         else if(Input.GetKeyUp(KeyCode.H))

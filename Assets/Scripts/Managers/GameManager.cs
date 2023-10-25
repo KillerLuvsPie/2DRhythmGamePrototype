@@ -89,29 +89,38 @@ public class GameManager : MonoBehaviour
         combo = 0;
     }
     
-    //FALLING INPUTS MANAGEMENT FUNCTIONS
-    public Color AddTransparencyToUsedNote(Color color, float alpha)
+    //FALLING NOTE LISTS MANAGEMENT FUNCTIONS
+    private Color AddTransparencyToUsedNote(Color color, float alpha)
     {
         return color = new Color(color.r, color.g, color.b, alpha);
     }
+
+    private void ProcessNoteList(List<SpriteRenderer> noteList, int inputIndex, bool addScore, int score, int scoreMultiplier, float alpha)
+    {
+        if(addScore)
+            IncreaseScore(score * scoreMultiplier);
+        else
+            DecreaseScore(score * scoreMultiplier);
+        noteList[inputIndex].color = AddTransparencyToUsedNote(noteList[inputIndex].color, alpha);
+        noteList[inputIndex].GetComponent<FallingInputController>().enabled = false;
+        inputIndex++;
+    }
+
+    //----------CIRCLE LIST----------
     //CIRCLE INPUT WAS PRESSED
     public void CirclePressed()
     {
         //CHECK IF INPUT IS VERY ACCURATE
         if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
-            IncreaseScore(scoreIncrement*2);
-            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 0.70f);
-            circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
-            circleListIndex++;
+            ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2, /*Alpha change*/ 0.70f);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
         else if (Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
         {
-            IncreaseScore(scoreIncrement);
-            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 0.45f);
-            circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
-            circleListIndex++;
+            ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
         }
         //ELSE IF INPUT WAS TOO EARLY
         else
@@ -124,17 +133,106 @@ public class GameManager : MonoBehaviour
     {
         if(circleList[circleListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
-            DecreaseScore(scoreDecrementIfMiss);
-            circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 0.20f);
-            circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
-            circleListIndex++;
+            ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/false,
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
         }
     }
-    //SQUARE LIST
 
-    //TRIANGLE LIST
+    //----------SQUARE LIST----------
+    //SQUARE INPUT WAS PRESSED
+    public void SquarePressed()
+    {
+        //CHECK IF INPUT IS VERY ACCURATE
+        if(Mathf.Abs(squareList[squareListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        {
+            ProcessNoteList(/*List:*/squareList, /*ListIndex:*/squareListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ 0.70f);
+        }
+        //CHECK IF INPUT IS NOT AS ACCURATE
+        else if (Mathf.Abs(squareList[squareListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        {
+            ProcessNoteList(/*List:*/squareList, /*ListIndex:*/squareListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+        }
+        //ELSE IF INPUT WAS TOO EARLY
+        else
+        {
+            DecreaseScore(scoreDecrementIfWrong);
+        }
+    }
+    //IF SQUARE NOTE WAS MISSED
+    public void MissedSquare()
+    {
+        if(squareList[squareListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        {
+            ProcessNoteList(/*List:*/squareList, /*ListIndex:*/squareListIndex, /*Add score?*/false,
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+        }
+    }
 
-    //DIAMOND LIST
+    //----------TRIANGLE LIST----------
+    //TRIANGLE INPUT WAS PRESSED
+    public void TrianglePressed()
+    {
+        //CHECK IF INPUT IS VERY ACCURATE
+        if(Mathf.Abs(triangleList[triangleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        {
+            ProcessNoteList(/*List:*/triangleList, /*ListIndex:*/triangleListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ 0.70f);
+        }
+        //CHECK IF INPUT IS NOT AS ACCURATE
+        else if (Mathf.Abs(triangleList[triangleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        {
+            ProcessNoteList(/*List:*/triangleList, /*ListIndex:*/triangleListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+        }
+        //ELSE IF INPUT WAS TOO EARLY
+        else
+        {
+            DecreaseScore(scoreDecrementIfWrong);
+        }
+    }
+    //IF TRIANGLE NOTE WAS MISSED
+    public void MissedTriangle()
+    {
+        if(triangleList[triangleListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        {
+            ProcessNoteList(/*List:*/triangleList, /*ListIndex:*/triangleListIndex, /*Add score?*/false,
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+        }
+    }
+    
+    //----------DIAMOND LIST----------
+    //TRIANGLE INPUT WAS PRESSED
+    public void DiamondPressed()
+    {
+        //CHECK IF INPUT IS VERY ACCURATE
+        if(Mathf.Abs(diamondList[diamondListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        {
+            ProcessNoteList(/*List:*/diamondList, /*ListIndex:*/diamondListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ 0.70f);
+        }
+        //CHECK IF INPUT IS NOT AS ACCURATE
+        else if (Mathf.Abs(diamondList[diamondListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        {
+            ProcessNoteList(/*List:*/diamondList, /*ListIndex:*/diamondListIndex, /*Add score?*/true,
+            /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ 0.45f);
+        }
+        //ELSE IF INPUT WAS TOO EARLY
+        else
+        {
+            DecreaseScore(scoreDecrementIfWrong);
+        }
+    }
+    //IF TRIANGLE NOTE WAS MISSED
+    public void MissedDiamond()
+    {
+        if(diamondList[diamondListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        {
+            ProcessNoteList(/*List:*/diamondList, /*ListIndex:*/diamondListIndex, /*Add score?*/false,
+            /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ 0.20f);
+        }
+    }
 
     //START OF GAME COUNTDOWN
     private IEnumerator Countdown()

@@ -23,11 +23,11 @@ public class FallingInputController : MonoBehaviour
     {
         if(fallingInput.inputName == "Circle")
             GameManager.Instance.MissedCircle();
-        /*else if(fallingInput.name == "Square")
+        else if(fallingInput.name == "Square")
             GameManager.Instance.MissedSquare();
         else if(fallingInput.name == "Triangle")
             GameManager.Instance.MissedTriangle();
         else if(fallingInput.name == "Diamond")
-            GameManager.Instance.MissedDiamond();*/
+            GameManager.Instance.MissedDiamond();
     }
 }
