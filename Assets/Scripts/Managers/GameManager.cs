@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Security.Cryptography;
 using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
@@ -23,22 +22,30 @@ public class GameManager : MonoBehaviour
     private double currentTime;
     private double targetTime;
     public bool started;
-
+    //AUDIO VARIABLES
+    public AudioSource audioSource;
     //GAME VARIABLES
     private int score = 0;
+    [SerializeField]
     private int scoreIncrement = 1;
+    [SerializeField]
     private int scoreDecrementIfMiss = 3;
+    [SerializeField]
     private int scoreDecrementIfWrong = 5;
     private int combo = 0;
-    private float bpm = 150;
-    private float scrollSpeed;
+    [SerializeField]
+    private float scrollSpeed = 1;
+    [SerializeField]
     private float inputRange = 0.25f;
+    [SerializeField]
     private float perfectHitAlpha = 0f;
+    [SerializeField]
     private float normalHitAlpha = 0f;
+    [SerializeField]
     private float missedAlpha = 0.1f;
 
     //FALLING INPUT VARIABLES
-    public Transform inputGroup;
+    public Transform inputChart;
     private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
     private List<SpriteRenderer> squareList = new List<SpriteRenderer>();
     private List<SpriteRenderer> triangleList = new List<SpriteRenderer>();
@@ -53,7 +60,7 @@ public class GameManager : MonoBehaviour
     void CalculateTime()
     {
         currentTime = AudioSettings.dspTime - startTime;
-        seconds = Mathf.RoundToInt((float)currentTime % 60f);
+        seconds = (int)(currentTime % 60);
         minutes = Mathf.FloorToInt((float)currentTime / 60f);
         if (seconds >= 60)
         {
@@ -65,7 +72,7 @@ public class GameManager : MonoBehaviour
     //NOTE SCROLL FUNCTION
     private void ScrollNotes()
     {
-        inputGroup.Translate(0,-scrollSpeed * Time.deltaTime,0);
+        inputChart.Translate(0,-scrollSpeed * Time.deltaTime,0);
     }
     private void CheckIfMusicIsDone()
     {
@@ -127,11 +134,13 @@ public class GameManager : MonoBehaviour
             ResetCombo();
         }
         noteList[inputIndex].color = AddTransparencyToUsedNote(noteList[inputIndex].color, alpha);
-        noteList[inputIndex].GetComponent<FallingInputController>().enabled = false;
+        noteList[inputIndex].GetComponent<FallingInputController>().disabledNote = true;
         float distance = noteList[inputIndex].transform.position.y - hitLine.position.y;
         ShowHitMessage(distance);
+        print(inputIndex);
         if(inputIndex < noteList.Count-1)
             inputIndex++;
+        print(inputIndex);
     }
 
     //----------CIRCLE LIST----------
@@ -163,10 +172,8 @@ public class GameManager : MonoBehaviour
     {
         if(circleList[circleListIndex].transform.position.y - hitLine.position.y < -inputRange)
         {
-
             ProcessNoteList(/*List:*/circleList, /*ListIndex:*/circleListIndex, /*Add score?*/false,
             /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
-            
         }
     }
 
@@ -262,7 +269,7 @@ public class GameManager : MonoBehaviour
             ResetCombo();
         }
     }
-    //IF TRIANGLE NOTE WAS MISSED
+    //IF DIAMOND NOTE WAS MISSED
     public void MissedDiamond()
     {
         if(diamondList[diamondListIndex].transform.position.y - hitLine.position.y < -inputRange)
@@ -286,6 +293,7 @@ public class GameManager : MonoBehaviour
             {
                 countdown.text = "START";
                 startTime = AudioSettings.dspTime;
+                audioSource.Play();
                 started = true;
                 yield return new WaitForSeconds(1.5f);
                 countdown.text = "";
@@ -299,21 +307,25 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         else
             Instance = this;
-        for(int i = 0; i < inputGroup.childCount; i++)
+        for(int i = 0; i < inputChart.childCount; i++)
         {
-            FallingInputController fic = inputGroup.GetChild(i).GetComponent<FallingInputController>();
+            FallingInputController fic = inputChart.GetChild(i).GetComponent<FallingInputController>();
             switch(fic.fallingInput.inputName)
             {
                 case "Circle":
+                    fic.transform.localPosition = new Vector2(0, fic.inputTime * scrollSpeed);
                     circleList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
                     break;
                 case "Square":
+                    fic.transform.localPosition = new Vector2(2, fic.inputTime * scrollSpeed);
                     squareList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
                     break;
                 case "Triangle":
+                    fic.transform.localPosition = new Vector2(4, fic.inputTime * scrollSpeed);
                     triangleList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
                     break;
                 case "Diamond":
+                    fic.transform.localPosition = new Vector2(6, fic.inputTime * scrollSpeed);
                     diamondList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
                     break;
                 default:
@@ -325,6 +337,7 @@ public class GameManager : MonoBehaviour
         squareList.Add(LastNotes[1]);
         triangleList.Add(LastNotes[2]);
         diamondList.Add(LastNotes[3]);
+        /* UNCOMMENT IF IT IS NECESSARY TO CHECK WHAT IS IN THE LISTS
         for(int i = 0; i < circleList.Count; i++)
         {
             print("Circle List, Pos " + i + ": " + circleList[i].name);
@@ -340,16 +353,14 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < diamondList.Count; i++)
         {
             print("Diamond List, Pos " + i + ": " + diamondList[i].name);
-        }
+        }*/
     }
 
     void Start()
     {
-        scrollSpeed = bpm / 60;
         countdown.text = "";
         hitIndicator.text = "";
         StartCoroutine(Countdown());
-        circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, 50);
     }
     // Update is called once per frame
     void Update()
