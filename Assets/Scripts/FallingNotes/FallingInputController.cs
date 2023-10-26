@@ -7,7 +7,7 @@ public class FallingInputController : MonoBehaviour
     public FallingInput fallingInput;
     public float inputTime;
     private SpriteRenderer spriteRenderer;
-    public bool disabledNote = false;
+    
 
     void PrepareNote()
     {
@@ -23,17 +23,14 @@ public class FallingInputController : MonoBehaviour
     }
     void Update()
     {
-        if(!disabledNote)
-        {
-            if(fallingInput.inputName == "Circle")
-                GameManager.Instance.MissedCircle();
-            else if(fallingInput.inputName == "Square")
-                GameManager.Instance.MissedSquare();
-            else if(fallingInput.inputName == "Triangle")
-                GameManager.Instance.MissedTriangle();
-            else if(fallingInput.inputName == "Diamond")
-                GameManager.Instance.MissedDiamond();
-        }
+        if(fallingInput.inputName == "Circle")
+            GameManager.Instance.MissedCircle();
+        else if(fallingInput.inputName == "Square")
+            GameManager.Instance.MissedSquare();
+        else if(fallingInput.inputName == "Triangle")
+            GameManager.Instance.MissedTriangle();
+        else if(fallingInput.inputName == "Diamond")
+            GameManager.Instance.MissedDiamond();
     }
 }
 /*
