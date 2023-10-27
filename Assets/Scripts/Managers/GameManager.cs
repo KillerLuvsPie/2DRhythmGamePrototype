@@ -95,13 +95,13 @@ public class GameManager : MonoBehaviour
     public void IncreaseCombo()
     {
         combo++;
-        comboUI.text = "Combo:" + combo;
+        comboUI.text = "Combo:" + combo.ToString("000");
     }
 
     public void ResetCombo()
     {
         combo = 0;
-        comboUI.text = "Combo:" + combo;
+        comboUI.text = "Combo:" + combo.ToString("000");
     }
     
     //FALLING NOTE LISTS MANAGEMENT FUNCTIONS
