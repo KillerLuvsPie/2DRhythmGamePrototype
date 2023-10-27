@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     private int minutes;
     private double startTime;
     private double currentTime;
-    private double targetTime;
     public bool started;
     //AUDIO VARIABLES
     public AudioSource audioSource;
