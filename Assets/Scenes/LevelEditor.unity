@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 1174873}
   - component: {fileID: 1174874}
   m_Layer: 5
-  m_Name: TimerToggle
+  m_Name: WaitTimerToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -789,7 +789,7 @@ GameObject:
   - component: {fileID: 533605524}
   - component: {fileID: 533605523}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: ScrollSpeedInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -964,7 +964,7 @@ GameObject:
   - component: {fileID: 654708267}
   - component: {fileID: 654708266}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: WaitTimerLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1132,10 +1132,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Instance: {fileID: 0}
-  circleHitMarker: {fileID: 0}
-  squareHitMarker: {fileID: 0}
-  triangleHitMarker: {fileID: 0}
-  diamondHitMarker: {fileID: 0}
+  circleHitMarker: {fileID: 7403111106900258167}
+  squareHitMarker: {fileID: 7403111106900258166}
+  triangleHitMarker: {fileID: 7403111106900258165}
+  diamondHitMarker: {fileID: 7403111106900258164}
 --- !u!1 &669914495
 GameObject:
   m_ObjectHideFlags: 0
@@ -3083,9 +3083,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '+00.25
+  m_text: 'Circle at
 
-    Nice'
+    00:00.000'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3128,7 +3128,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -3175,7 +3175,7 @@ GameObject:
   - component: {fileID: 1577010417}
   - component: {fileID: 1577010416}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: WaitTimerInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3347,6 +3347,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1632542245}
+  - component: {fileID: 1632542247}
   - component: {fileID: 1632542246}
   m_Layer: 0
   m_Name: LevelEditorManager
@@ -3382,24 +3383,120 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c265e450447f2449b196f4a9a50886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeedUI: {fileID: 0}
-  numberOfNotesUI: {fileID: 0}
-  waitForSecondsToggleUI: {fileID: 0}
-  waitForSecondsInputUI: {fileID: 0}
-  deleteAllNotesButtonUI: {fileID: 0}
-  saveChartButtonUI: {fileID: 0}
-  timerInputUI: {fileID: 0}
-  playButtonUI: {fileID: 0}
-  playButtonTextUI: {fileID: 0}
-  restartTimerButtonUI: {fileID: 0}
-  hitIndicatorUI: {fileID: 0}
-  hitLine: {fileID: 0}
+  scrollSpeedUI: {fileID: 533605523}
+  numberOfNotesUI: {fileID: 739844363}
+  waitForSecondsToggleUI: {fileID: 1174874}
+  waitForSecondsInputUI: {fileID: 1577010416}
+  deleteAllNotesButtonUI: {fileID: 1806139388}
+  saveChartButtonUI: {fileID: 1278984557}
+  timerInputUI: {fileID: 1567093004}
+  playButtonUI: {fileID: 951674876}
+  playButtonTextUI: {fileID: 1173057930}
+  restartTimerButtonUI: {fileID: 677480738}
+  hitIndicatorUI: {fileID: 1570433846}
+  hitLine: {fileID: 1976855073}
   isPlaying: 0
   audioSource: {fileID: 0}
   scrollSpeed: 1
   missedAlpha: 0.1
   inputChart: {fileID: 0}
   LastNotes: []
+--- !u!82 &1632542247
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632542244}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 879c1377f13604c4c9f9946284eff36f, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1783761451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3900,6 +3997,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1916950714}
   m_CullTransparentMesh: 1
+--- !u!4 &1976855073 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4964623485805080579, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1523505491252215720
 Transform:
   m_ObjectHideFlags: 0
@@ -4947,5 +5049,25 @@ PrefabInstance:
 --- !u!4 &7403111106900258163 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1969737757579340219, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258164 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1222368844591083031, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258165 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8512126168262004116, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258166 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3295796624198662263, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258167 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3054082622367670835, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}

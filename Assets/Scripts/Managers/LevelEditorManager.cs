@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.Mathematics;
+using UnityEditor;
 
 public class LevelEditorManager : MonoBehaviour
 {
     //SINGLETON
-    public static GameManager Instance;
+    public static LevelEditorManager Instance;
     
     //UI ELEMENTS
     public TMP_InputField scrollSpeedUI;
@@ -31,8 +33,7 @@ public class LevelEditorManager : MonoBehaviour
     //TIME VARIABLES
     private float secondsAndMiliseconds;
     private int minutes;
-    private double musicStart;
-    private double currentTime;
+    private float currentTime;
     public bool isPlaying;
     //AUDIO VARIABLES
     public AudioSource audioSource;
@@ -41,22 +42,68 @@ public class LevelEditorManager : MonoBehaviour
     [SerializeField]
     private float scrollSpeed = 1;
     [SerializeField]
-    private float missedAlpha = 0.25f;
-
+    private float noteAlpha = 0.25f;
+    public GameObject circleInput;
+    public GameObject squareInput;
+    public GameObject triangleInput;
+    public GameObject diamondInput;
     //FALLING INPUT VARIABLES
     public Transform inputChart;
-    private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
-    private List<SpriteRenderer> squareList = new List<SpriteRenderer>();
-    private List<SpriteRenderer> triangleList = new List<SpriteRenderer>();
-    private List<SpriteRenderer> diamondList = new List<SpriteRenderer>();
+    private List<GameObject> circleList = new List<GameObject>();
+    private List<GameObject> squareList = new List<GameObject>();
+    private List<GameObject> triangleList = new List<GameObject>();
+    private List<GameObject> diamondList = new List<GameObject>();
     
     public SpriteRenderer[] LastNotes;
     //FUNCTIONS
-    //TIMER FUNCTION
-    void CalculateTime()
+    //NOTE CREATION
+    public void CreateCircle()
     {
-        secondsAndMiliseconds = audioSource.time % 60;
-        minutes = Mathf.FloorToInt((float)audioSource.time / 60f);
+        GameObject obj = Instantiate(circleInput, inputChart);
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        FallingInputController fic = obj.GetComponent<FallingInputController>();
+        sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        fic.inputTime = audioSource.time;
+        obj.transform.localPosition = new Vector2(0, fic.inputTime);
+        circleList.Add(obj);
+    }
+    public void CreateSquare()
+    {
+        GameObject obj = Instantiate(squareInput, inputChart);
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        FallingInputController fic = obj.GetComponent<FallingInputController>();
+        sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        fic.inputTime = audioSource.time;
+        obj.transform.localPosition = new Vector2(2, fic.inputTime);
+        circleList.Add(obj);
+    }
+    public void CreateTriangle()
+    {
+        GameObject obj = Instantiate(triangleInput, inputChart);
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        FallingInputController fic = obj.GetComponent<FallingInputController>();
+        sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        fic.inputTime = audioSource.time;
+        obj.transform.localPosition = new Vector2(4, fic.inputTime);
+        circleList.Add(obj);
+    }
+    public void CreateDiamond()
+    {
+        GameObject obj = Instantiate(diamondInput, inputChart);
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        FallingInputController fic = obj.GetComponent<FallingInputController>();
+        sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        fic.inputTime = audioSource.time;
+        obj.transform.localPosition = new Vector2(6, fic.inputTime);
+        circleList.Add(obj);
+    }
+
+    //TIMER FUNCTION
+    private void CalculateTime()
+    {
+        currentTime = audioSource.time;
+        secondsAndMiliseconds = currentTime % 60;
+        minutes = Mathf.FloorToInt((float)currentTime / 60f);
         if (secondsAndMiliseconds >= 60)
         {
             secondsAndMiliseconds -= 60;
@@ -64,7 +111,13 @@ public class LevelEditorManager : MonoBehaviour
         }
         timerInputUI.text = minutes.ToString("00") + ":" + secondsAndMiliseconds.ToString("00.000");
     }
-    //BUTTON FUNCTIONS
+    //UI FUNCTIONS
+    public void ScrollSpeedUIChange()
+    {
+        scrollSpeed = float.Parse(scrollSpeedUI.text);
+        audioSource.pitch = scrollSpeed;
+    }
+    //PLAY/PAUSE BUTTON
     public void PlayButtonToggle()
     {
         Image playButtonImage = playButtonUI.GetComponent<Image>();
@@ -77,14 +130,26 @@ public class LevelEditorManager : MonoBehaviour
         else if(playButtonImage.color == redButton)
         {
             //PAUSE MUSIC FUNCTION GOES HERE
+            audioSource.Stop();
+            ResetCoroutine();
+            playButtonTextUI.text = "PLAY";
+            playButtonImage.color = greenButton;
         }
         //COUNTING DOWN
         else
         {
-            StopCoroutine(coroutine);
+            ResetCoroutine();
+            playButtonTextUI.text = "PLAY";
             playButtonImage.color = greenButton;
         }
     }
+
+    //RESTART TIMER BUTTON
+    public void RestartTimer()
+    {
+        timerInputUI.text = "00:00.000";
+    }
+
     //COUNTDOWN COROUTINE
     private IEnumerator Countdown()
     {
@@ -92,25 +157,36 @@ public class LevelEditorManager : MonoBehaviour
         playButtonUI.GetComponent<Image>().color = yellowButton;
         while (seconds > 0)
         {
+            playButtonTextUI.text = "STARTING IN " + seconds.ToString();
             yield return new WaitForSeconds(1);
             --seconds;
-            playButtonTextUI.text = "Starting in " + seconds.ToString();
-            if(seconds == 0)
-            {
-                playButtonTextUI.text = "Pause";
-                playButtonUI.GetComponent<Image>().color = redButton;
-                musicStart = audioSource.time;
-                audioSource.Play();
-                isPlaying = true;
-            }
         }
+        if(seconds == 0)
+        {
+            playButtonTextUI.text = "PAUSE";
+            playButtonUI.GetComponent<Image>().color = redButton;
+            //audioSource.Play();
+            isPlaying = true;
+        }
+    }
+    //RESET COROUTINE
+    private void ResetCoroutine()
+    {
+        StopCoroutine(coroutine);
+        coroutine = Countdown();
+        isPlaying = false;
     }
     void Awake()
     {
-        circleList.Add(LastNotes[0]);
+        /*/circleList.Add(LastNotes[0]);
         squareList.Add(LastNotes[1]);
         triangleList.Add(LastNotes[2]);
-        diamondList.Add(LastNotes[3]);
+        diamondList.Add(LastNotes[3]);*/
+        if(Instance != null && Instance != this)
+            Destroy(this);
+        else
+            Instance = this;
+        audioSource = GetComponent<AudioSource>();
     }
     // Start is called before the first frame update
     void Start()
@@ -121,6 +197,9 @@ public class LevelEditorManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(isPlaying)
+        {
+            CalculateTime();
+        }
     }
 }

@@ -23,14 +23,18 @@ public class FallingInputController : MonoBehaviour
     }
     void Update()
     {
-        if(fallingInput.inputName == "Circle")
-            GameManager.Instance.MissedCircle();
-        else if(fallingInput.inputName == "Square")
-            GameManager.Instance.MissedSquare();
-        else if(fallingInput.inputName == "Triangle")
-            GameManager.Instance.MissedTriangle();
-        else if(fallingInput.inputName == "Diamond")
-            GameManager.Instance.MissedDiamond();
+        if(GameManager.Instance)
+        {
+            if(fallingInput.inputName == "Circle")
+                GameManager.Instance.MissedCircle();
+            else if(fallingInput.inputName == "Square")
+                GameManager.Instance.MissedSquare();
+            else if(fallingInput.inputName == "Triangle")
+                GameManager.Instance.MissedTriangle();
+            else if(fallingInput.inputName == "Diamond")
+                GameManager.Instance.MissedDiamond();
+        }
+        
     }
 }
 /*

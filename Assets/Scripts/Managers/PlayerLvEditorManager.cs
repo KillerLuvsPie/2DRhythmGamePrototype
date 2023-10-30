@@ -43,7 +43,7 @@ public class PlayerLvEditorManager : MonoBehaviour
     }
     void Update()
     {
-        if(GameManager.Instance.started)
+        if(LevelEditorManager.Instance.isPlaying)
         {
             if(Input.GetKeyDown(KeyCode.A))
             {
@@ -51,7 +51,7 @@ public class PlayerLvEditorManager : MonoBehaviour
                 if(isCircleHeld == false)
                 {
                     isCircleHeld = true;
-                    
+                    LevelEditorManager.Instance.CreateCircle();
                 }
             }
             else if(Input.GetKeyUp(KeyCode.A))
@@ -65,7 +65,7 @@ public class PlayerLvEditorManager : MonoBehaviour
                 if(isSquareHeld == false)
                 {
                     isSquareHeld = true;
-                    
+                    LevelEditorManager.Instance.CreateSquare();
                 }
             }
             else if(Input.GetKeyUp(KeyCode.S))
@@ -79,7 +79,7 @@ public class PlayerLvEditorManager : MonoBehaviour
                 if(isTriangleHeld == false)
                 {
                     isTriangleHeld = true;
-                    
+                    LevelEditorManager.Instance.CreateTriangle();
                 }
             }
             else if(Input.GetKeyUp(KeyCode.G))
@@ -93,7 +93,7 @@ public class PlayerLvEditorManager : MonoBehaviour
                 if(isDiamondHeld == false)
                 {
                     isDiamondHeld = true;
-                    
+                    LevelEditorManager.Instance.CreateDiamond();
                 }
             }
             else if(Input.GetKeyUp(KeyCode.H))
