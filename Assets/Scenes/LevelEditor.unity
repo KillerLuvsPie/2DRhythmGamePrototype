@@ -211,6 +211,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!212 &26068522 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 215150492778718971, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &90326297
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,6 +427,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 148790794}
   m_CullTransparentMesh: 1
+--- !u!212 &217899692 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6433800077640368454, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &276711884
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +567,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276711884}
   m_CullTransparentMesh: 1
+--- !u!212 &502990095 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1202462514015018572, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,7 +714,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "00:00.000\u200B"
+  m_text: "00:00,000\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -789,7 +804,7 @@ GameObject:
   - component: {fileID: 533605524}
   - component: {fileID: 533605523}
   m_Layer: 5
-  m_Name: ScrollSpeedInput
+  m_Name: PlaybackSpeedInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -814,7 +829,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 90, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &533605523
 MonoBehaviour:
@@ -864,20 +879,32 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 3
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 2
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 3
   m_RegexValue: 
   m_GlobalPointSize: 30
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1632542246}
+        m_TargetAssemblyTypeName: LevelEditorManager, Assembly-CSharp
+        m_MethodName: PlaybackSpeedUIChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -1132,10 +1159,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Instance: {fileID: 0}
-  circleHitMarker: {fileID: 7403111106900258167}
-  squareHitMarker: {fileID: 7403111106900258166}
-  triangleHitMarker: {fileID: 7403111106900258165}
-  diamondHitMarker: {fileID: 7403111106900258164}
+  circleHitMarker: {fileID: 502990095}
+  squareHitMarker: {fileID: 26068522}
+  triangleHitMarker: {fileID: 217899692}
+  diamondHitMarker: {fileID: 1894808709}
 --- !u!1 &669914495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,7 +1323,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 677480739}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1632542246}
+        m_TargetAssemblyTypeName: LevelEditorManager, Assembly-CSharp
+        m_MethodName: RestartTimer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &677480739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1911,7 +1950,7 @@ GameObject:
   - component: {fileID: 808076282}
   - component: {fileID: 808076281}
   m_Layer: 5
-  m_Name: ScrollSpeed
+  m_Name: PlaybackSpeedLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1936,7 +1975,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 15, y: -25}
-  m_SizeDelta: {x: 225, y: 50}
+  m_SizeDelta: {x: 280, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &808076281
 MonoBehaviour:
@@ -1958,7 +1997,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Scroll Speed:'
+  m_text: 'Playback Speed:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2073,7 +2112,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 40}
+  m_SizeDelta: {x: 200, y: 40}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &951674876
 MonoBehaviour:
@@ -2118,7 +2157,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 951674877}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1632542246}
+        m_TargetAssemblyTypeName: LevelEditorManager, Assembly-CSharp
+        m_MethodName: PlayButtonToggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &951674877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2770,7 +2821,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00.000
+  m_text: 00:00,000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2950,7 +3001,19 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1632542246}
+        m_TargetAssemblyTypeName: LevelEditorManager, Assembly-CSharp
+        m_MethodName: OnTimerChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -2975,7 +3038,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 00:00.000
+  m_Text: 00:00,000
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -3383,7 +3446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c265e450447f2449b196f4a9a50886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeedUI: {fileID: 533605523}
+  playbackSpeedUI: {fileID: 533605523}
   numberOfNotesUI: {fileID: 739844363}
   waitForSecondsToggleUI: {fileID: 1174874}
   waitForSecondsInputUI: {fileID: 1577010416}
@@ -3397,10 +3460,19 @@ MonoBehaviour:
   hitLine: {fileID: 1976855073}
   isPlaying: 0
   audioSource: {fileID: 0}
-  scrollSpeed: 1
-  missedAlpha: 0.1
-  inputChart: {fileID: 0}
-  LastNotes: []
+  audioMixerGroup: {fileID: 24300002, guid: e204281fc99614049ba9f12682fd1211, type: 2}
+  noteSpacing: 2
+  noteAlpha: 0.25
+  circleInput: {fileID: 8442972250954169496, guid: ce5062967dee7dc42a0c23776d446ae6, type: 3}
+  squareInput: {fileID: 8442972250954169496, guid: af9411f934e2c2848b5a5438d56fa697, type: 3}
+  triangleInput: {fileID: 8442972250954169496, guid: 67eb72d463d9e4b49b43ad0afb72e973, type: 3}
+  diamondInput: {fileID: 8442972250954169496, guid: 2b9625b4abe8765408eb55e63e08b3c9, type: 3}
+  inputChart: {fileID: 1523505491252215720}
+  LastNotes:
+  - {fileID: 7403111106900258167}
+  - {fileID: 7403111106900258166}
+  - {fileID: 7403111106900258165}
+  - {fileID: 7403111106900258164}
 --- !u!82 &1632542247
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3410,7 +3482,7 @@ AudioSource:
   m_GameObject: {fileID: 1632542244}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: e204281fc99614049ba9f12682fd1211, type: 2}
   m_audioClip: {fileID: 8300000, guid: 879c1377f13604c4c9f9946284eff36f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -3716,7 +3788,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1806139389}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1632542246}
+        m_TargetAssemblyTypeName: LevelEditorManager, Assembly-CSharp
+        m_MethodName: DeleteAllNotesButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1806139389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3808,6 +3892,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!212 &1894808709 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3592037125117795843, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1900426823
 GameObject:
   m_ObjectHideFlags: 0

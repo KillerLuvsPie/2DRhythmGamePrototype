@@ -98,3 +98,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallingInput: {fileID: 11400000, guid: c062e0ea89bc3b446ab9f1a5e8f1d90b, type: 2}
+  inputTime: 0

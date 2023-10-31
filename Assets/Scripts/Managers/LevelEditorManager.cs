@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Unity.Mathematics;
-using UnityEditor;
+using UnityEngine.Audio;
+using Unity.VisualScripting;
 
 public class LevelEditorManager : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class LevelEditorManager : MonoBehaviour
     public static LevelEditorManager Instance;
     
     //UI ELEMENTS
-    public TMP_InputField scrollSpeedUI;
+    public TMP_InputField playbackSpeedUI;
     public TextMeshProUGUI numberOfNotesUI;
     public Toggle waitForSecondsToggleUI;
     public TMP_InputField waitForSecondsInputUI;
@@ -37,12 +37,16 @@ public class LevelEditorManager : MonoBehaviour
     public bool isPlaying;
     //AUDIO VARIABLES
     public AudioSource audioSource;
+    public AudioMixerGroup audioMixerGroup;
     //LEVEL EDITOR VARIABLES
     private IEnumerator coroutine;
     [SerializeField]
-    private float scrollSpeed = 1;
+    private float noteSpacing = 2;
+    private float yOffset;
+    private float playbackSpeed = 1;
     [SerializeField]
-    private float noteAlpha = 0.25f;
+    private float noteAlpha = 0.5f;
+    private int totalNotes;
     public GameObject circleInput;
     public GameObject squareInput;
     public GameObject triangleInput;
@@ -53,8 +57,8 @@ public class LevelEditorManager : MonoBehaviour
     private List<GameObject> squareList = new List<GameObject>();
     private List<GameObject> triangleList = new List<GameObject>();
     private List<GameObject> diamondList = new List<GameObject>();
-    
     public SpriteRenderer[] LastNotes;
+
     //FUNCTIONS
     //NOTE CREATION
     public void CreateCircle()
@@ -63,9 +67,10 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
-        fic.inputTime = audioSource.time;
-        obj.transform.localPosition = new Vector2(0, fic.inputTime);
+        fic.inputTime = currentTime;
+        obj.transform.localPosition = new Vector2(0, fic.inputTime * noteSpacing);
         circleList.Add(obj);
+        ChangeNumberOfNotes(true);
     }
     public void CreateSquare()
     {
@@ -73,9 +78,10 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
-        fic.inputTime = audioSource.time;
-        obj.transform.localPosition = new Vector2(2, fic.inputTime);
-        circleList.Add(obj);
+        fic.inputTime = currentTime;
+        obj.transform.localPosition = new Vector2(2, fic.inputTime * noteSpacing);
+        squareList.Add(obj);
+        ChangeNumberOfNotes(true);
     }
     public void CreateTriangle()
     {
@@ -83,9 +89,10 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
-        fic.inputTime = audioSource.time;
-        obj.transform.localPosition = new Vector2(4, fic.inputTime);
-        circleList.Add(obj);
+        fic.inputTime = currentTime;
+        obj.transform.localPosition = new Vector2(4, fic.inputTime * noteSpacing);
+        triangleList.Add(obj);
+        ChangeNumberOfNotes(true);
     }
     public void CreateDiamond()
     {
@@ -93,9 +100,16 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
-        fic.inputTime = audioSource.time;
-        obj.transform.localPosition = new Vector2(6, fic.inputTime);
-        circleList.Add(obj);
+        fic.inputTime = currentTime;
+        obj.transform.localPosition = new Vector2(6, fic.inputTime * noteSpacing);
+        diamondList.Add(obj);
+        ChangeNumberOfNotes(true);
+    }
+
+    //SCROLL FUNCTION
+    private void ScrollNotes()
+    {
+        inputChart.position = new Vector2(3, -currentTime * noteSpacing + yOffset);
     }
 
     //TIMER FUNCTION
@@ -111,12 +125,75 @@ public class LevelEditorManager : MonoBehaviour
         }
         timerInputUI.text = minutes.ToString("00") + ":" + secondsAndMiliseconds.ToString("00.000");
     }
+
     //UI FUNCTIONS
-    public void ScrollSpeedUIChange()
+    //DISABLE UI ELEMENTS WHEN MUSIC IS PLAYING
+    private void DisableUIElements()
     {
-        scrollSpeed = float.Parse(scrollSpeedUI.text);
-        audioSource.pitch = scrollSpeed;
+        playbackSpeedUI.interactable = false;
+        waitForSecondsToggleUI.interactable = false;
+        waitForSecondsInputUI.interactable = false;
+        deleteAllNotesButtonUI.interactable = false;
+        saveChartButtonUI.interactable = false;
+        timerInputUI.interactable = false;
+        restartTimerButtonUI.interactable = false;
     }
+
+    private void EnableUIElements()
+    {
+        playbackSpeedUI.interactable = true;
+        waitForSecondsToggleUI.interactable = true;
+        waitForSecondsInputUI.interactable = true;
+        deleteAllNotesButtonUI.interactable = true;
+        saveChartButtonUI.interactable = true;
+        timerInputUI.interactable = true;
+        restartTimerButtonUI.interactable = true;
+    }
+
+    //PLAYBACK SPEED CHANGE
+    public void PlaybackSpeedUIChange()
+    {
+        playbackSpeed = float.Parse(playbackSpeedUI.text);
+        audioSource.pitch = playbackSpeed;
+        audioMixerGroup.audioMixer.SetFloat("pitch", 1/playbackSpeed);
+    }
+
+    //CHANGE NUMBER OF NOTES LABEL
+    public void ChangeNumberOfNotes(bool add, bool reset = false)
+    {
+        if(add)
+            totalNotes++;            
+        else if(reset)
+            totalNotes = 0;
+        else
+            totalNotes--;
+        numberOfNotesUI.text = "Nº of notes: " + totalNotes;
+    }
+
+    //DELETE ALL NOTES BUTTON
+    public void DeleteAllNotesButton()
+    {
+        for(int i = 0; i < inputChart.childCount; i++)
+            Destroy(inputChart.GetChild(i).GameObject());
+        circleList.Clear();
+        squareList.Clear();
+        triangleList.Clear();
+        diamondList.Clear();
+        ChangeNumberOfNotes(false, true);
+    }
+
+    //SORT LIST FUNCTION
+    private void SortList()
+    {
+
+    }
+    
+    //SAVE CHART BUTTON
+    public void SaveChartButton()
+    {
+        
+    }
+
     //PLAY/PAUSE BUTTON
     public void PlayButtonToggle()
     {
@@ -125,15 +202,16 @@ public class LevelEditorManager : MonoBehaviour
         if(playButtonImage.color == greenButton)
         {
             StartCoroutine(coroutine);
+            DisableUIElements();
         }
         //PAUSE
         else if(playButtonImage.color == redButton)
         {
-            //PAUSE MUSIC FUNCTION GOES HERE
-            audioSource.Stop();
+            audioSource.Pause();
             ResetCoroutine();
             playButtonTextUI.text = "PLAY";
             playButtonImage.color = greenButton;
+            EnableUIElements();
         }
         //COUNTING DOWN
         else
@@ -141,19 +219,38 @@ public class LevelEditorManager : MonoBehaviour
             ResetCoroutine();
             playButtonTextUI.text = "PLAY";
             playButtonImage.color = greenButton;
+            EnableUIElements();
         }
+    }
+
+    //WHEN TIMER CHANGES
+    public void OnTimerChange()
+    {
+        print("Entered On Timer Change");
+        int minutes = int.Parse(timerInputUI.text.Split(":")[0]);
+        currentTime = 0;
+        for(int i = 0; i < minutes; i++)
+            currentTime += 60;
+        currentTime += float.Parse(timerInputUI.text.Split(":")[1]);
+        audioSource.time = currentTime;
+        ScrollNotes();
     }
 
     //RESTART TIMER BUTTON
     public void RestartTimer()
     {
-        timerInputUI.text = "00:00.000";
+        timerInputUI.text = "00:00,000";
+        currentTime = 0;
+        audioSource.time = currentTime;
+        ScrollNotes();
     }
 
     //COUNTDOWN COROUTINE
     private IEnumerator Countdown()
     {
         int seconds = int.Parse(waitForSecondsInputUI.text);
+        if(!waitForSecondsToggleUI.isOn)
+            seconds = 0;
         playButtonUI.GetComponent<Image>().color = yellowButton;
         while (seconds > 0)
         {
@@ -161,14 +258,12 @@ public class LevelEditorManager : MonoBehaviour
             yield return new WaitForSeconds(1);
             --seconds;
         }
-        if(seconds == 0)
-        {
-            playButtonTextUI.text = "PAUSE";
-            playButtonUI.GetComponent<Image>().color = redButton;
-            //audioSource.Play();
-            isPlaying = true;
-        }
+        playButtonTextUI.text = "PAUSE";
+        playButtonUI.GetComponent<Image>().color = redButton;
+        audioSource.Play();
+        isPlaying = true;
     }
+
     //RESET COROUTINE
     private void ResetCoroutine()
     {
@@ -176,9 +271,11 @@ public class LevelEditorManager : MonoBehaviour
         coroutine = Countdown();
         isPlaying = false;
     }
+
+    //UNITY FUNCTIONS
     void Awake()
     {
-        /*/circleList.Add(LastNotes[0]);
+        /*circleList.Add(LastNotes[0]);
         squareList.Add(LastNotes[1]);
         triangleList.Add(LastNotes[2]);
         diamondList.Add(LastNotes[3]);*/
@@ -187,19 +284,20 @@ public class LevelEditorManager : MonoBehaviour
         else
             Instance = this;
         audioSource = GetComponent<AudioSource>();
+        yOffset = inputChart.transform.position.y;
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         coroutine = Countdown();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(isPlaying)
         {
             CalculateTime();
+            ScrollNotes();
         }
     }
 }

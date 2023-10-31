@@ -17,7 +17,7 @@ public class FallingInputController : MonoBehaviour
         transform.localScale = fallingInput.scaleAdjust;
     }
 
-    void Start()
+    void Awake()
     {
         PrepareNote();
     }
@@ -34,7 +34,6 @@ public class FallingInputController : MonoBehaviour
             else if(fallingInput.inputName == "Diamond")
                 GameManager.Instance.MissedDiamond();
         }
-        
     }
 }
 /*
