@@ -181,17 +181,42 @@ public class LevelEditorManager : MonoBehaviour
         diamondList.Clear();
         ChangeNumberOfNotes(false, true);
     }
-
-    //SORT LIST FUNCTION
-    private void SortList()
-    {
-
-    }
     
     //SAVE CHART BUTTON
     public void SaveChartButton()
     {
-        
+        circleList.Sort((c1, c2) => c1.GetComponent<FallingInputController>().inputTime.CompareTo(c2.GetComponent<FallingInputController>().inputTime));
+        squareList.Sort((c1, c2) => c1.GetComponent<FallingInputController>().inputTime.CompareTo(c2.GetComponent<FallingInputController>().inputTime));
+        triangleList.Sort((c1, c2) => c1.GetComponent<FallingInputController>().inputTime.CompareTo(c2.GetComponent<FallingInputController>().inputTime));
+        diamondList.Sort((c1, c2) => c1.GetComponent<FallingInputController>().inputTime.CompareTo(c2.GetComponent<FallingInputController>().inputTime));
+        SaveLoadManager.inputTypeCountList.Clear();
+        SaveLoadManager.inputTimeList.Clear();
+        for(int i = 0; i < 4; i++)
+            SaveLoadManager.inputTypeCountList.Add(0);
+        foreach(GameObject circle in circleList)
+        {
+            SaveLoadManager.inputTypeCountList[0]++;
+            SaveLoadManager.inputTimeList.Add(circle.GetComponent<FallingInputController>().inputTime);
+        }
+            
+        foreach(GameObject square in squareList)
+        {
+            SaveLoadManager.inputTypeCountList[1]++;
+            SaveLoadManager.inputTimeList.Add(square.GetComponent<FallingInputController>().inputTime);
+        }
+            
+        foreach(GameObject triangle in triangleList)
+        {
+            SaveLoadManager.inputTypeCountList[2]++;
+            SaveLoadManager.inputTimeList.Add(triangle.GetComponent<FallingInputController>().inputTime);
+        }
+            
+        foreach(GameObject diamond in diamondList)
+        {
+            SaveLoadManager.inputTypeCountList[3]++;
+            SaveLoadManager.inputTimeList.Add(diamond.GetComponent<FallingInputController>().inputTime);
+        }
+        SaveLoadManager.SaveChart(audioSource.clip.name);
     }
 
     //PLAY/PAUSE BUTTON

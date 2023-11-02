@@ -8,27 +8,34 @@ using UnityEditor;
 public static class SaveLoadManager
 {
     //SAVE VARUABLES
-    public static List<GameObject> inputList;
+    [SerializeField]
+    public static List<int> inputTypeCountList = new List<int>();
+    [SerializeField]
+    public static List<float> inputTimeList = new List<float>();
     //SAVE CHART FUNCTION
     public static void SaveChart(string fileName)
     {
         string path = Application.dataPath + "/Resources/Charts";
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(path + "/" + fileName + ".chrt");
-        bf.Serialize(file, inputList);
+        bf.Serialize(file, inputTypeCountList);
+        bf.Serialize(file, inputTimeList);
         file.Close();
     }
     //LOAD CHART FUNCTION
     public static void LoadChart(string fileName)
     {
         string path = Application.dataPath + "/Resources/Charts";
-        if(File.Exists(path + "/" + fileName + "chrt"))
+        if(File.Exists(path + "/" + fileName + ".chrt"))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(path + "/" + fileName + ".chrt");
-            inputList = (List<GameObject>)bf.Deserialize(file);
+            FileStream file = File.Open(path + "/" + fileName + ".chrt", FileMode.Open);
+            inputTypeCountList = (List<int>)bf.Deserialize(file);
+            inputTimeList = (List<float>)bf.Deserialize(file);
             file.Close();
         }
+        else
+            Debug.Log(fileName + ".chrt does not exist");
     }
     //SAVE GAME FUNCTION
     public static void Save(string fileName)

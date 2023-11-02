@@ -46,6 +46,10 @@ public class GameManager : MonoBehaviour
     private float missedAlpha = 0.1f;
 
     //FALLING INPUT VARIABLES
+    public GameObject circleInput;
+    public GameObject squareInput;
+    public GameObject triangleInput;
+    public GameObject diamondInput;
     public Transform inputChart;
     private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
     private List<SpriteRenderer> squareList = new List<SpriteRenderer>();
@@ -104,6 +108,13 @@ public class GameManager : MonoBehaviour
     }
     
     //FALLING NOTE LISTS MANAGEMENT FUNCTIONS
+    private void NoteSetup(GameObject obj, float xPos, float inputTime, List<SpriteRenderer> list)
+    {
+        GameObject instance = Instantiate(obj, inputChart);
+        instance.transform.localPosition = new Vector2(xPos, inputTime * scrollSpeed);
+        list.Add(instance.GetComponent<SpriteRenderer>());
+    }
+
     private Color AddTransparencyToUsedNote(Color color, float alpha)
     {
         return color = new Color(color.r, color.g, color.b, alpha);
@@ -118,10 +129,12 @@ public class GameManager : MonoBehaviour
         else
             hitIndicator.text = "\nMiss";
     }
+
     private void ShowEarlyHitMessage()
     {
         hitIndicator.text = "Too\nEarly";
     }
+
     private void ProcessNoteList(InputType inputType, bool addScore, int score, int scoreMultiplier, float alpha)
     {
         float distance = 0;
@@ -321,7 +334,34 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         else
             Instance = this;
-        for(int i = 0; i < inputChart.childCount; i++)
+        SaveLoadManager.LoadChart(audioSource.clip.name);
+        int indexOffset = 0;
+        for(int i = 0; i < SaveLoadManager.inputTypeCountList.Count; i++)
+        {
+            for(int j = indexOffset; j < SaveLoadManager.inputTypeCountList[i] + indexOffset; j++)
+            {
+                switch(i)
+                {
+                    case 0:
+                        NoteSetup(circleInput, 0, SaveLoadManager.inputTimeList[j], circleList);
+                        break;
+                    case 1:
+                        NoteSetup(squareInput, 2, SaveLoadManager.inputTimeList[j], squareList);
+                        break;
+                    case 2:
+                        NoteSetup(triangleInput, 4, SaveLoadManager.inputTimeList[j], triangleList);
+                        break;
+                    case 3:
+                        NoteSetup(diamondInput, 6, SaveLoadManager.inputTimeList[j], diamondList);
+                        break;
+                    default:
+                        print("ERROR: inputTypeCountList in SaveLoadManager has more than 4 entries");
+                        break;
+                }
+            }
+            indexOffset += SaveLoadManager.inputTypeCountList[i];
+        }
+        /*for(int i = 0; i < inputChart.childCount; i++)
         {
             FallingInputController fic = inputChart.GetChild(i).GetComponent<FallingInputController>();
             switch(fic.fallingInput.inputName)
@@ -346,7 +386,7 @@ public class GameManager : MonoBehaviour
                     print("ERROR: Invalid falling input name at Awake function in GameManager");
                     break;
             }
-        }
+        }*/
         circleList.Add(LastNotes[0]);
         squareList.Add(LastNotes[1]);
         triangleList.Add(LastNotes[2]);
