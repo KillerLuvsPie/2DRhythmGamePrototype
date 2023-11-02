@@ -87,13 +87,13 @@ public class GameManager : MonoBehaviour
     public void IncreaseScore(int increment)
     {
         score += increment + combo/10;
-        scoreUI.text = "Score:" + score; 
+        scoreUI.text = "Score:" + score.ToString("000000"); 
     }
 
     public void DecreaseScore(int decrement)
     {
         score -= decrement;
-        scoreUI.text = "Score:" + score;
+        scoreUI.text = "Score:" + score.ToString("000000");
     }
     public void IncreaseCombo()
     {
@@ -112,6 +112,9 @@ public class GameManager : MonoBehaviour
     {
         GameObject instance = Instantiate(obj, inputChart);
         instance.transform.localPosition = new Vector2(xPos, inputTime * scrollSpeed);
+        //COMMENT THIS NEXT LINE WHEN DEBUG IS DONE (LESS LOAD)
+        instance.GetComponent<FallingInputController>().inputTime = inputTime;
+        //-----------------------------------------
         list.Add(instance.GetComponent<SpriteRenderer>());
     }
 
