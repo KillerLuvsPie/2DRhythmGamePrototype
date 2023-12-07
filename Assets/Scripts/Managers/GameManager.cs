@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,11 +16,17 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timerUI;
     public TextMeshProUGUI countdown;
     public TextMeshProUGUI hitIndicator;
+    //REMOVE hitLine VARIABLE AS IT IS NOW OBSOLETE AFTER NEW MECHANICS ARE IMPLEMENTED
     public Transform hitLine;
+    //HIT MARKERS FOR NOTES (TO REPLACE hitLine)
+    public Transform circleHitZone;
+    public Transform squareHitZone;
+    public Transform triangleHitZone;
+    public Transform diamondHitZone;
+
     //TIME VARIABLES
     private int seconds;
     private int minutes;
-    private double startTime;
     private double currentTime;
     public bool started;
     //AUDIO VARIABLES
@@ -35,7 +41,7 @@ public class GameManager : MonoBehaviour
     private int scoreDecrementIfWrong = 5;
     private int combo = 0;
     [SerializeField]
-    private float scrollSpeed = 1;
+    public float scrollSpeed = 1;
     [SerializeField]
     private float inputRange = 0.25f;
     [SerializeField]
@@ -64,7 +70,7 @@ public class GameManager : MonoBehaviour
     //TIMER FUNCTION
     void CalculateTime()
     {
-        currentTime = AudioSettings.dspTime - startTime;
+        currentTime = audioSource.time;
         seconds = (int)(currentTime % 60);
         minutes = Mathf.FloorToInt((float)currentTime / 60f);
         if (seconds >= 60)
@@ -74,15 +80,19 @@ public class GameManager : MonoBehaviour
         }
         timerUI.text = minutes.ToString("00") + ":" + seconds.ToString("00");
     }
-    //NOTE SCROLL FUNCTION
+    //NOTE SCROLL FUNCTION (OBSOLETE ... DELETE THIS AFTER NEW MOVE METHOD IS COMPLETE OR CHANGE TO SOMETHING ELSE)
     private void ScrollNotes()
     {
         inputChart.Translate(0,-scrollSpeed * Time.deltaTime,0);
+        //inputChart.position = new Vector2(0, -currentTime * scrollSpeed);
     }
+
+    //END OF MUSIC FUNCTION
     private void CheckIfMusicIsDone()
     {
         
     }
+    
     //POINTS FUNCTIONS
     public void IncreaseScore(int increment)
     {
@@ -125,9 +135,9 @@ public class GameManager : MonoBehaviour
 
     private void ShowHitMessage(float distance)
     {
-        if(Mathf.Abs(distance) <= Mathf.Lerp(0, inputRange, 0.5f))
+        if(distance <= Mathf.Lerp(0, inputRange, 0.5f))
             hitIndicator.text = (-distance).ToString("0.000") + "\nNice!";
-        else if(Mathf.Abs(distance) <= inputRange)
+        else if(distance <= inputRange)
             hitIndicator.text = (-distance).ToString("0.000") + "\nOk";
         else
             hitIndicator.text = "\nMiss";
@@ -155,29 +165,29 @@ public class GameManager : MonoBehaviour
         {
             case InputType.Circle:
                 circleList[circleListIndex].color = AddTransparencyToUsedNote(circleList[circleListIndex].color, alpha);
-                circleList[circleListIndex].GetComponent<FallingInputController>().enabled = false;
-                distance = circleList[circleListIndex].transform.position.y - hitLine.position.y;
+                circleList[circleListIndex].GetComponent<FallingInputController>().isActive = false;
+                distance = Vector3.Distance(circleList[circleListIndex].transform.position, circleHitZone.position);
                 if(circleListIndex < circleList.Count-1)
                     circleListIndex++;
                 break;
             case InputType.Square:
                 squareList[squareListIndex].color = AddTransparencyToUsedNote(squareList[squareListIndex].color, alpha);
-                squareList[squareListIndex].GetComponent<FallingInputController>().enabled = false;
-                distance = squareList[squareListIndex].transform.position.y - hitLine.position.y;
+                squareList[squareListIndex].GetComponent<FallingInputController>().isActive = false;
+                distance = Vector3.Distance(squareList[squareListIndex].transform.position, squareHitZone.position);
                 if(squareListIndex < squareList.Count-1)
                     squareListIndex++;
                 break;
             case InputType.Triangle:
                 triangleList[triangleListIndex].color = AddTransparencyToUsedNote(triangleList[triangleListIndex].color, alpha);
-                triangleList[triangleListIndex].GetComponent<FallingInputController>().enabled = false;
-                distance = triangleList[triangleListIndex].transform.position.y - hitLine.position.y;
+                triangleList[triangleListIndex].GetComponent<FallingInputController>().isActive = false;
+                distance = Vector3.Distance(triangleList[triangleListIndex].transform.position, triangleHitZone.position);
                 if(triangleListIndex < triangleList.Count-1)
                     triangleListIndex++;
                 break;
             case InputType.Diamond:
                 diamondList[diamondListIndex].color = AddTransparencyToUsedNote(diamondList[diamondListIndex].color, alpha);
-                diamondList[diamondListIndex].GetComponent<FallingInputController>().enabled = false;
-                distance = diamondList[diamondListIndex].transform.position.y - hitLine.position.y;
+                diamondList[diamondListIndex].GetComponent<FallingInputController>().isActive = false;
+                distance = Vector3.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position);
                 if(diamondListIndex < diamondList.Count-1)
                     diamondListIndex++;
                 break;
@@ -190,12 +200,12 @@ public class GameManager : MonoBehaviour
     public void CirclePressed()
     {
         //CHECK IF INPUT IS VERY ACCURATE
-        if(Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        if(Vector2.Distance(circleList[circleListIndex].transform.position, circleHitZone.position) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*ListType*/InputType.Circle, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 2, /*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
-        else if (Mathf.Abs(circleList[circleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        else if (Vector2.Distance(circleList[circleListIndex].transform.position, circleHitZone.position) <= inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Circle, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
@@ -208,9 +218,10 @@ public class GameManager : MonoBehaviour
         }
     }
     //IF CIRCLE NOTE WAS MISSED
-    public void MissedCircle()
+    public void MissedCircle(Transform noteTransform, Vector2 noteDirection)
     {
-        if(circleList[circleListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        Vector2 direction = (noteTransform.position - circleHitZone.position).normalized;
+        if(-direction != noteDirection && Vector2.Distance(circleList[circleListIndex].transform.position, circleHitZone.position) > inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Circle, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
@@ -221,12 +232,12 @@ public class GameManager : MonoBehaviour
     public void SquarePressed()
     {
         //CHECK IF INPUT IS VERY ACCURATE
-        if(Mathf.Abs(squareList[squareListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        if(Vector2.Distance(squareList[squareListIndex].transform.position, squareHitZone.position) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*ListType*/InputType.Square, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
-        else if (Mathf.Abs(squareList[squareListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        else if (Vector2.Distance(squareList[squareListIndex].transform.position, squareHitZone.position) <= inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Square, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
@@ -239,9 +250,10 @@ public class GameManager : MonoBehaviour
         }
     }
     //IF SQUARE NOTE WAS MISSED
-    public void MissedSquare()
+    public void MissedSquare(Transform noteTransform, Vector2 noteDirection)
     {
-        if(squareList[squareListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        Vector2 direction = (noteTransform.position - squareHitZone.position).normalized;
+        if(-direction != noteDirection && Vector2.Distance(squareList[squareListIndex].transform.position, squareHitZone.position) > inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Square, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
@@ -252,12 +264,12 @@ public class GameManager : MonoBehaviour
     public void TrianglePressed()
     {
         //CHECK IF INPUT IS VERY ACCURATE
-        if(Mathf.Abs(triangleList[triangleListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        if(Vector2.Distance(triangleList[triangleListIndex].transform.position, triangleHitZone.position) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*ListType*/InputType.Triangle, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
-        else if (Mathf.Abs(triangleList[triangleListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        else if (Vector2.Distance(triangleList[triangleListIndex].transform.position, triangleHitZone.position) <= inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Triangle, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
@@ -270,9 +282,10 @@ public class GameManager : MonoBehaviour
         }
     }
     //IF TRIANGLE NOTE WAS MISSED
-    public void MissedTriangle()
+    public void MissedTriangle(Transform noteTransform, Vector2 noteDirection)
     {
-        if(triangleList[triangleListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        Vector2 direction = (noteTransform.position - triangleHitZone.position).normalized;
+        if(-direction != noteDirection && Vector2.Distance(triangleList[triangleListIndex].transform.position, triangleHitZone.position) > inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Triangle, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
@@ -283,12 +296,12 @@ public class GameManager : MonoBehaviour
     public void DiamondPressed()
     {
         //CHECK IF INPUT IS VERY ACCURATE
-        if(Mathf.Abs(diamondList[diamondListIndex].transform.position.y - hitLine.position.y) <= Mathf.Lerp(0, inputRange, 0.5f))
+        if(Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position) <= Mathf.Lerp(0, inputRange, 0.5f))
         {
             ProcessNoteList(/*ListType*/InputType.Diamond, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 2,/*Alpha change*/ perfectHitAlpha);
         }
         //CHECK IF INPUT IS NOT AS ACCURATE
-        else if (Mathf.Abs(diamondList[diamondListIndex].transform.position.y - hitLine.position.y) <= inputRange)
+        else if (Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position) <= inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Diamond, /*Add score?*/true, /*How many points*/scoreIncrement, /*Score multiplier*/ 1,/*Alpha change*/ normalHitAlpha);
         }
@@ -301,10 +314,13 @@ public class GameManager : MonoBehaviour
         }
     }
     //IF DIAMOND NOTE WAS MISSED
-    public void MissedDiamond()
+    public void MissedDiamond(Transform noteTransform, Vector2 noteDirection)
     {
-        if(diamondList[diamondListIndex].transform.position.y - hitLine.position.y < -inputRange)
+        Vector2 direction = (noteTransform.position - diamondHitZone.position).normalized;
+        print("HitZone Direction: " + direction + "\tNote Direction: " + noteDirection);
+        if(-direction != noteDirection && Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position) > inputRange)
         {
+            print(Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position));
             ProcessNoteList(/*ListType*/InputType.Diamond, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
     }
@@ -322,7 +338,6 @@ public class GameManager : MonoBehaviour
             else if(seconds == 0)
             {
                 countdown.text = "START";
-                startTime = AudioSettings.dspTime;
                 audioSource.Play();
                 started = true;
                 yield return new WaitForSeconds(1.5f);
@@ -364,32 +379,6 @@ public class GameManager : MonoBehaviour
             }
             indexOffset += SaveLoadManager.inputTypeCountList[i];
         }
-        /*for(int i = 0; i < inputChart.childCount; i++)
-        {
-            FallingInputController fic = inputChart.GetChild(i).GetComponent<FallingInputController>();
-            switch(fic.fallingInput.inputName)
-            {
-                case "Circle":
-                    fic.transform.localPosition = new Vector2(0, fic.inputTime * scrollSpeed);
-                    circleList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
-                    break;
-                case "Square":
-                    fic.transform.localPosition = new Vector2(2, fic.inputTime * scrollSpeed);
-                    squareList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
-                    break;
-                case "Triangle":
-                    fic.transform.localPosition = new Vector2(4, fic.inputTime * scrollSpeed);
-                    triangleList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
-                    break;
-                case "Diamond":
-                    fic.transform.localPosition = new Vector2(6, fic.inputTime * scrollSpeed);
-                    diamondList.Add(fic.GameObject().GetComponent<SpriteRenderer>());
-                    break;
-                default:
-                    print("ERROR: Invalid falling input name at Awake function in GameManager");
-                    break;
-            }
-        }*/
         circleList.Add(LastNotes[0]);
         squareList.Add(LastNotes[1]);
         triangleList.Add(LastNotes[2]);
@@ -425,7 +414,6 @@ public class GameManager : MonoBehaviour
         if(started)
         {
             CalculateTime();
-            ScrollNotes();
         }
     }
 }

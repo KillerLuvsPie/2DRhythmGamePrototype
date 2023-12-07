@@ -179,13 +179,17 @@ MonoBehaviour:
   countdown: {fileID: 1145412562}
   hitIndicator: {fileID: 1570433846}
   hitLine: {fileID: 1561901930}
+  circleHitZone: {fileID: 1690126614}
+  squareHitZone: {fileID: 1490380929}
+  triangleHitZone: {fileID: 1214305624}
+  diamondHitZone: {fileID: 993453305}
   started: 0
   audioSource: {fileID: 285629778}
   scoreIncrement: 1
   scoreDecrementIfMiss: 3
   scoreDecrementIfWrong: 5
-  scrollSpeed: 4
-  inputRange: 0.5
+  scrollSpeed: 2
+  inputRange: 0.25
   perfectHitAlpha: 0
   normalHitAlpha: 0
   missedAlpha: 0.1
@@ -641,7 +645,7 @@ Canvas:
   m_GameObject: {fileID: 704338836}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -958,6 +962,11 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3592037125117795843, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &993453305 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5707552002477546591, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1145412560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1107,11 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1222368844591083031, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1214305624 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2596552953875661283, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1328961567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,6 +1180,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1490380929 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6585706129109463306, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1561901930 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4964623485805080579, guid: 822f096cf05c6634b912018c1973905e, type: 3}
@@ -1311,6 +1330,11 @@ CanvasRenderer:
 --- !u!212 &1690126613 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1202462514015018572, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1690126614 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8816120493637526816, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}
 --- !u!212 &1705816279 stripped
@@ -1597,7 +1621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1969737757579340219, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.97
       objectReference: {fileID: 0}
     - target: {fileID: 1969737757579340219, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_LocalPosition.y

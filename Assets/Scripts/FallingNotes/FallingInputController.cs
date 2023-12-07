@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FallingInputController : MonoBehaviour
 {
     public FallingInput fallingInput;
     public float inputTime;
+    public Vector3 moveDirection;
+    public bool isActive = true;
+    public bool canMove = false;
     private SpriteRenderer spriteRenderer;
     
-
     void PrepareNote()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -17,22 +20,72 @@ public class FallingInputController : MonoBehaviour
         transform.localScale = fallingInput.scaleAdjust;
     }
 
+    private void GetDirection()
+    {
+        switch(fallingInput.inputName)
+        {
+            case "Circle":
+                moveDirection = (GameManager.Instance.circleHitZone.position - transform.position).normalized;
+                break;
+            case "Square":
+                moveDirection = (GameManager.Instance.squareHitZone.position - transform.position).normalized;
+                break;
+            case "Triangle":
+                moveDirection = (GameManager.Instance.triangleHitZone.position - transform.position).normalized;
+                break;
+            case "Diamond":
+                moveDirection = (GameManager.Instance.diamondHitZone.position - transform.position).normalized;
+                break;
+        }
+        
+    }
+
+    private void MoveTowards()
+    {        
+        transform.Translate(moveDirection * Time.deltaTime*GameManager.Instance.scrollSpeed);
+    }
+
     void Awake()
     {
         PrepareNote();
     }
+
+    void Start()
+    {
+        GetDirection();
+    }
+
     void Update()
     {
         if(GameManager.Instance)
         {
-            if(fallingInput.inputName == "Circle")
-                GameManager.Instance.MissedCircle();
-            else if(fallingInput.inputName == "Square")
-                GameManager.Instance.MissedSquare();
-            else if(fallingInput.inputName == "Triangle")
-                GameManager.Instance.MissedTriangle();
-            else if(fallingInput.inputName == "Diamond")
-                GameManager.Instance.MissedDiamond();
+            if(/*canMove &&*/ GameManager.Instance.started)
+            {
+                if(fallingInput.inputName == "Circle")
+                {
+                    MoveTowards();
+                    if(isActive)
+                        GameManager.Instance.MissedCircle(transform, moveDirection);
+                }
+                else if(fallingInput.inputName == "Square")
+                {
+                    MoveTowards();
+                    if(isActive)
+                        GameManager.Instance.MissedSquare(transform, moveDirection);
+                }
+                else if(fallingInput.inputName == "Triangle")
+                {
+                    MoveTowards();
+                    if(isActive)
+                        GameManager.Instance.MissedTriangle(transform, moveDirection);
+                }
+                else if(fallingInput.inputName == "Diamond")
+                {
+                    MoveTowards();
+                    if(isActive)
+                        GameManager.Instance.MissedDiamond(transform, moveDirection);
+                }
+            }
         }
     }
 }
