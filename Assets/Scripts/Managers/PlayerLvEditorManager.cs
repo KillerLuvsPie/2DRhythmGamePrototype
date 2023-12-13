@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerLvEditorManager : MonoBehaviour
 {
     //SINGLETON
-    public PlayerLvEditorManager Instance;
+    public static PlayerLvEditorManager Instance;
     //HIT MARKERS
     public SpriteRenderer circleHitMarker;
     public SpriteRenderer squareHitMarker;

@@ -22,29 +22,64 @@ public class FallingInputController : MonoBehaviour
 
     private void GetDirection()
     {
-        switch(fallingInput.inputName)
+        if(GameManager.Instance)
         {
-            case "Circle":
-                moveDirection = (GameManager.Instance.circleHitZone.position - transform.position).normalized;
-                break;
-            case "Square":
-                moveDirection = (GameManager.Instance.squareHitZone.position - transform.position).normalized;
-                break;
-            case "Triangle":
-                moveDirection = (GameManager.Instance.triangleHitZone.position - transform.position).normalized;
-                break;
-            case "Diamond":
-                moveDirection = (GameManager.Instance.diamondHitZone.position - transform.position).normalized;
-                break;
+            switch(fallingInput.inputName)
+            {
+                case "Circle":
+                    moveDirection = (GameManager.Instance.circleHitZone.position - transform.position).normalized;
+                    break;
+                case "Square":
+                    moveDirection = (GameManager.Instance.squareHitZone.position - transform.position).normalized;
+                    break;
+                case "Triangle":
+                    moveDirection = (GameManager.Instance.triangleHitZone.position - transform.position).normalized;
+                    break;
+                case "Diamond":
+                    moveDirection = (GameManager.Instance.diamondHitZone.position - transform.position).normalized;
+                    break;
+            }
         }
-        
     }
 
+    private float CalculateTimeWithDistance()
+    {
+        return (float)
+        (
+            (inputTime - GameManager.Instance.currentTime - (GameManager.Instance.baseTranslateDuration / GameManager.Instance.scrollSpeed)) /
+            GameManager.Instance.baseTranslateDuration * (GameManager.Instance.scrollSpeed / 2)
+        );
+    }
     private void MoveTowards()
-    {        
-        transform.Translate(moveDirection * Time.deltaTime*GameManager.Instance.scrollSpeed);
+    {
+        if(isActive)
+        {
+            switch(fallingInput.inputName)
+            {
+                case "Circle":
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.circleHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    break;
+                case "Square":
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.squareHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    break;
+                case "Triangle":
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.triangleHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    break;
+                case "Diamond":
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.diamondHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    break;
+            }  
+        }
+        else
+            DisableScript();
+            
     }
 
+    private void DisableScript()
+    {
+        this.enabled = false;
+    }
+    
     void Awake()
     {
         PrepareNote();
@@ -59,7 +94,7 @@ public class FallingInputController : MonoBehaviour
     {
         if(GameManager.Instance)
         {
-            if(/*canMove &&*/ GameManager.Instance.started)
+            if(canMove /*&& GameManager.Instance.started*/)
             {
                 if(fallingInput.inputName == "Circle")
                 {

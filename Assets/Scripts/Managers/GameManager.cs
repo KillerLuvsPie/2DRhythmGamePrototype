@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     //TIME VARIABLES
     private int seconds;
     private int minutes;
-    private double currentTime;
+    public double currentTime;
     public bool started;
     //AUDIO VARIABLES
     public AudioSource audioSource;
@@ -51,20 +51,35 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float missedAlpha = 0.1f;
 
-    //FALLING INPUT VARIABLES
-    public GameObject circleInput;
-    public GameObject squareInput;
-    public GameObject triangleInput;
-    public GameObject diamondInput;
-    public Transform inputChart;
-    private List<SpriteRenderer> circleList = new List<SpriteRenderer>();
-    private List<SpriteRenderer> squareList = new List<SpriteRenderer>();
-    private List<SpriteRenderer> triangleList = new List<SpriteRenderer>();
-    private List<SpriteRenderer> diamondList = new List<SpriteRenderer>();
+    //FALLING NOTES VARIABLES
+    public float baseTranslateDuration = 2;
+    //REFERENCES
+    public GameObject circleNote;
+    public GameObject squareNote;
+    public GameObject triangleNote;
+    public GameObject diamondNote;
+    public Transform noteChart;
+    //NOTE LISTS
+    public List<SpriteRenderer> circleList = new List<SpriteRenderer>();
+    public List<SpriteRenderer> squareList = new List<SpriteRenderer>();
+    public List<SpriteRenderer> triangleList = new List<SpriteRenderer>();
+    public List<SpriteRenderer> diamondList = new List<SpriteRenderer>();
+    //NOTE LIST INDEX (NEXT NOTE TO BE PRESSED)
     private int circleListIndex = 0;
     private int squareListIndex = 0;
     private int triangleListIndex = 0;
     private int diamondListIndex = 0;
+    //NOTE ACTIVATION INDEX (NEXT NOTE TO BE ACTIVATED AND TRANSLATED)
+    private int circleActivationIndex = 0;
+    private int squareActivationIndex = 0;
+    private int triangleActivationIndex = 0;
+    private int diamondActivationIndex = 0;
+    //NOTE ACTIvATION TIMES
+    private double circleActivationTime;
+    private double squareActivationTime;
+    private double triangleActivationTime;
+    private double diamondActivationTime;
+    //LAST NOTES (USED TO AVOID INDEX OUT OF RANGE ERROR, RESULTS IN A "TOO EARLY" WHEN THERE ARE NO NOTES LEFT) | 0 = CIRCLE | 1 = SQUARE | 2 = TRIANGLE | 3 = DIAMOND |
     public SpriteRenderer[] LastNotes;
     
     //TIMER FUNCTION
@@ -83,7 +98,7 @@ public class GameManager : MonoBehaviour
     //NOTE SCROLL FUNCTION (OBSOLETE ... DELETE THIS AFTER NEW MOVE METHOD IS COMPLETE OR CHANGE TO SOMETHING ELSE)
     private void ScrollNotes()
     {
-        inputChart.Translate(0,-scrollSpeed * Time.deltaTime,0);
+        noteChart.Translate(0,-scrollSpeed * Time.deltaTime,0);
         //inputChart.position = new Vector2(0, -currentTime * scrollSpeed);
     }
 
@@ -120,8 +135,9 @@ public class GameManager : MonoBehaviour
     //FALLING NOTE LISTS MANAGEMENT FUNCTIONS
     private void NoteSetup(GameObject obj, float xPos, float inputTime, List<SpriteRenderer> list)
     {
-        GameObject instance = Instantiate(obj, inputChart);
-        instance.transform.localPosition = new Vector2(xPos, inputTime * scrollSpeed);
+        GameObject instance = Instantiate(obj, noteChart);
+        instance.transform.position = new Vector2(0,0);
+        //instance.transform.localPosition = new Vector2(xPos, inputTime * scrollSpeed);
         //COMMENT THIS NEXT LINE WHEN DEBUG IS DONE (LESS LOAD)
         instance.GetComponent<FallingInputController>().inputTime = inputTime;
         //-----------------------------------------
@@ -221,7 +237,7 @@ public class GameManager : MonoBehaviour
     public void MissedCircle(Transform noteTransform, Vector2 noteDirection)
     {
         Vector2 direction = (noteTransform.position - circleHitZone.position).normalized;
-        if(-direction != noteDirection && Vector2.Distance(circleList[circleListIndex].transform.position, circleHitZone.position) > inputRange)
+        if(Vector2.Dot(direction, noteDirection) > 0.999f && Vector2.Distance(circleList[circleListIndex].transform.position, circleHitZone.position) > inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Circle, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
@@ -253,7 +269,7 @@ public class GameManager : MonoBehaviour
     public void MissedSquare(Transform noteTransform, Vector2 noteDirection)
     {
         Vector2 direction = (noteTransform.position - squareHitZone.position).normalized;
-        if(-direction != noteDirection && Vector2.Distance(squareList[squareListIndex].transform.position, squareHitZone.position) > inputRange)
+        if(Vector2.Dot(direction, noteDirection) > 0.999f && Vector2.Distance(squareList[squareListIndex].transform.position, squareHitZone.position) > inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Square, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
@@ -285,7 +301,7 @@ public class GameManager : MonoBehaviour
     public void MissedTriangle(Transform noteTransform, Vector2 noteDirection)
     {
         Vector2 direction = (noteTransform.position - triangleHitZone.position).normalized;
-        if(-direction != noteDirection && Vector2.Distance(triangleList[triangleListIndex].transform.position, triangleHitZone.position) > inputRange)
+        if(Vector2.Dot(direction, noteDirection) > 0.999f && Vector2.Distance(triangleList[triangleListIndex].transform.position, triangleHitZone.position) > inputRange)
         {
             ProcessNoteList(/*ListType*/InputType.Triangle, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
@@ -317,14 +333,73 @@ public class GameManager : MonoBehaviour
     public void MissedDiamond(Transform noteTransform, Vector2 noteDirection)
     {
         Vector2 direction = (noteTransform.position - diamondHitZone.position).normalized;
-        print("HitZone Direction: " + direction + "\tNote Direction: " + noteDirection);
-        if(-direction != noteDirection && Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position) > inputRange)
+        //print("HitZone Direction: " + direction + "\tNote Direction: " + noteDirection + "Dot Product: " + Vector2.Dot(-direction, noteDirection));
+        if(Vector2.Dot(direction, noteDirection) > 0.999f && Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position) > inputRange)
         {
-            print(Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position));
+            //print(Vector2.Distance(diamondList[diamondListIndex].transform.position, diamondHitZone.position));
             ProcessNoteList(/*ListType*/InputType.Diamond, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss, /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
         }
     }
 
+    //NOTE ACTIVATION FUNCTIONS
+    private void SetActivationTime(string noteType)
+    {
+        switch(noteType)
+        {
+            case "Circle":
+                if(circleActivationIndex < circleList.Count-1)
+                    circleActivationTime = circleList[circleActivationIndex].GetComponent<FallingInputController>().inputTime;
+                break;
+            case "Square":
+                print(squareActivationIndex);
+                if(squareActivationIndex < squareList.Count-1)
+                {
+                    squareActivationTime = squareList[squareActivationIndex].GetComponent<FallingInputController>().inputTime;
+                    print(squareActivationIndex);
+                }
+                
+                
+                break;
+            case "Triangle":
+                if(triangleActivationIndex < triangleList.Count-1)
+                    triangleActivationTime = triangleList[triangleActivationIndex].GetComponent<FallingInputController>().inputTime;
+                break;
+            case "Diamond":
+                if(diamondActivationIndex < diamondList.Count-1)
+                    diamondActivationTime = diamondList[diamondActivationIndex].GetComponent<FallingInputController>().inputTime;
+                break;
+            default:
+                print("SetActivationTime has received an invalid string: " + noteType);
+                break;
+        }
+    }
+
+    private void ActivateNote(string noteType)
+    {
+        switch(noteType)
+        {
+            case "Circle":
+                circleList[circleActivationIndex].GetComponent<FallingInputController>().canMove = true;
+                circleActivationIndex++;
+                break;
+            case "Square":
+                squareList[squareActivationIndex].GetComponent<FallingInputController>().canMove = true;
+                squareActivationIndex++;
+                break;
+            case "Triangle":
+                triangleList[triangleActivationIndex].GetComponent<FallingInputController>().canMove = true;
+                triangleActivationIndex++;
+                break;
+            case "Diamond":
+                diamondList[diamondActivationIndex].GetComponent<FallingInputController>().canMove = true;
+                diamondActivationIndex++;
+                break;
+            default:
+                print("ActivateNote has received an invalid string: " + noteType);
+                break;  
+        }
+        SetActivationTime(noteType);
+    }
     //START OF GAME COUNTDOWN
     private IEnumerator Countdown()
     {
@@ -361,16 +436,16 @@ public class GameManager : MonoBehaviour
                 switch(i)
                 {
                     case 0:
-                        NoteSetup(circleInput, 0, SaveLoadManager.inputTimeList[j], circleList);
+                        NoteSetup(circleNote, 0, SaveLoadManager.inputTimeList[j], circleList);
                         break;
                     case 1:
-                        NoteSetup(squareInput, 2, SaveLoadManager.inputTimeList[j], squareList);
+                        NoteSetup(squareNote, 2, SaveLoadManager.inputTimeList[j], squareList);
                         break;
                     case 2:
-                        NoteSetup(triangleInput, 4, SaveLoadManager.inputTimeList[j], triangleList);
+                        NoteSetup(triangleNote, 4, SaveLoadManager.inputTimeList[j], triangleList);
                         break;
                     case 3:
-                        NoteSetup(diamondInput, 6, SaveLoadManager.inputTimeList[j], diamondList);
+                        NoteSetup(diamondNote, 6, SaveLoadManager.inputTimeList[j], diamondList);
                         break;
                     default:
                         print("ERROR: inputTypeCountList in SaveLoadManager has more than 4 entries");
@@ -406,6 +481,10 @@ public class GameManager : MonoBehaviour
     {
         countdown.text = "";
         hitIndicator.text = "";
+        SetActivationTime("Circle");
+        SetActivationTime("Square");
+        SetActivationTime("Triangle");
+        SetActivationTime("Diamond");
         StartCoroutine(Countdown());
     }
     // Update is called once per frame
@@ -415,5 +494,19 @@ public class GameManager : MonoBehaviour
         {
             CalculateTime();
         }
+        if(currentTime >= circleActivationTime - baseTranslateDuration / scrollSpeed && circleActivationIndex < circleList.Count-1)
+        {
+            ActivateNote("Circle");
+        }
+        if(currentTime >= squareActivationTime - baseTranslateDuration / scrollSpeed && squareActivationIndex < squareList.Count-1)
+        {
+            print("Square Activation Time: " + squareActivationTime + "Condition result: " + (squareActivationTime - baseTranslateDuration / scrollSpeed));
+            ActivateNote("Square");
+        }
+            
+        if(currentTime >= triangleActivationTime - baseTranslateDuration / scrollSpeed && triangleActivationIndex < triangleList.Count-1)
+            ActivateNote("Triangle");
+        if(currentTime >= diamondActivationTime - baseTranslateDuration / scrollSpeed && diamondActivationIndex < diamondList.Count-1)
+            ActivateNote("Diamond");
     }
 }

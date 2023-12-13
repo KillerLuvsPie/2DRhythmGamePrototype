@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     //SINGLETON
-    public PlayerManager Instance;
+    public static PlayerManager Instance;
     //HIT MARKERS
     public SpriteRenderer circleHitMarker;
     public SpriteRenderer squareHitMarker;

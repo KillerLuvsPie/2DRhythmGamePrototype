@@ -183,21 +183,27 @@ MonoBehaviour:
   squareHitZone: {fileID: 1490380929}
   triangleHitZone: {fileID: 1214305624}
   diamondHitZone: {fileID: 993453305}
+  currentTime: 0
   started: 0
   audioSource: {fileID: 285629778}
   scoreIncrement: 1
   scoreDecrementIfMiss: 3
   scoreDecrementIfWrong: 5
-  scrollSpeed: 2
+  scrollSpeed: 1
   inputRange: 0.25
   perfectHitAlpha: 0
   normalHitAlpha: 0
   missedAlpha: 0.1
-  circleInput: {fileID: 8442972250954169496, guid: ce5062967dee7dc42a0c23776d446ae6, type: 3}
-  squareInput: {fileID: 8442972250954169496, guid: af9411f934e2c2848b5a5438d56fa697, type: 3}
-  triangleInput: {fileID: 8442972250954169496, guid: 67eb72d463d9e4b49b43ad0afb72e973, type: 3}
-  diamondInput: {fileID: 8442972250954169496, guid: 2b9625b4abe8765408eb55e63e08b3c9, type: 3}
-  inputChart: {fileID: 8517868295059662812}
+  baseTranslateDuration: 2
+  circleNote: {fileID: 8442972250954169496, guid: ce5062967dee7dc42a0c23776d446ae6, type: 3}
+  squareNote: {fileID: 8442972250954169496, guid: af9411f934e2c2848b5a5438d56fa697, type: 3}
+  triangleNote: {fileID: 8442972250954169496, guid: 67eb72d463d9e4b49b43ad0afb72e973, type: 3}
+  diamondNote: {fileID: 8442972250954169496, guid: 2b9625b4abe8765408eb55e63e08b3c9, type: 3}
+  noteChart: {fileID: 8517868295059662812}
+  circleList: []
+  squareList: []
+  triangleList: []
+  diamondList: []
   LastNotes:
   - {fileID: 1705816279}
   - {fileID: 1879068996}
@@ -572,7 +578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a62633b83d98a44a9813898451ce5b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Instance: {fileID: 0}
   circleHitMarker: {fileID: 1690126613}
   squareHitMarker: {fileID: 477244304}
   triangleHitMarker: {fileID: 830438385}
@@ -1390,7 +1395,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8517868295059662812}
   m_Layer: 0
-  m_Name: InputChart
+  m_Name: NoteChart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1621,7 +1626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1969737757579340219, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.97
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1969737757579340219, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2417,7 +2422,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4683322357520512134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

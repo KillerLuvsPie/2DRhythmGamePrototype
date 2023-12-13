@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: bb2fab9f926b3014e81272f199343bd1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,3 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallingInput: {fileID: 11400000, guid: c062e0ea89bc3b446ab9f1a5e8f1d90b, type: 2}
   inputTime: 0
+  moveDirection: {x: 0, y: 0, z: 0}
+  isActive: 1
+  canMove: 0

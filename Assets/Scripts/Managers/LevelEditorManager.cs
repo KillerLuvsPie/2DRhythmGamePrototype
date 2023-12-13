@@ -68,7 +68,7 @@ public class LevelEditorManager : MonoBehaviour
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
         fic.inputTime = currentTime;
-        obj.transform.localPosition = new Vector2(0, fic.inputTime * noteSpacing);
+        obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.circleHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         circleList.Add(obj);
         ChangeNumberOfNotes(true);
     }
@@ -79,7 +79,7 @@ public class LevelEditorManager : MonoBehaviour
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
         fic.inputTime = currentTime;
-        obj.transform.localPosition = new Vector2(2, fic.inputTime * noteSpacing);
+        obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.squareHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         squareList.Add(obj);
         ChangeNumberOfNotes(true);
     }
@@ -90,7 +90,7 @@ public class LevelEditorManager : MonoBehaviour
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
         fic.inputTime = currentTime;
-        obj.transform.localPosition = new Vector2(4, fic.inputTime * noteSpacing);
+        obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.triangleHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         triangleList.Add(obj);
         ChangeNumberOfNotes(true);
     }
@@ -101,7 +101,7 @@ public class LevelEditorManager : MonoBehaviour
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
         fic.inputTime = currentTime;
-        obj.transform.localPosition = new Vector2(6, fic.inputTime * noteSpacing);
+        obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.diamondHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         diamondList.Add(obj);
         ChangeNumberOfNotes(true);
     }
@@ -109,7 +109,7 @@ public class LevelEditorManager : MonoBehaviour
     //SCROLL FUNCTION
     private void ScrollNotes()
     {
-        inputChart.position = new Vector2(3, -currentTime * noteSpacing + yOffset);
+        inputChart.position = new Vector2(inputChart.position.x, -currentTime * noteSpacing + yOffset);
     }
 
     //TIMER FUNCTION
