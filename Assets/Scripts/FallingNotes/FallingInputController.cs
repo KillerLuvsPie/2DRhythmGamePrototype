@@ -11,6 +11,7 @@ public class FallingInputController : MonoBehaviour
     public bool isActive = true;
     public bool canMove = false;
     private SpriteRenderer spriteRenderer;
+    public SpriteRenderer outlineRenderer;
     
     void PrepareNote()
     {
@@ -18,6 +19,7 @@ public class FallingInputController : MonoBehaviour
         spriteRenderer.sprite = fallingInput.sprite;
         spriteRenderer.color = fallingInput.color;
         transform.localScale = fallingInput.scaleAdjust;
+        outlineRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     private void GetDirection()
@@ -27,16 +29,16 @@ public class FallingInputController : MonoBehaviour
             switch(fallingInput.inputName)
             {
                 case "Circle":
-                    moveDirection = (GameManager.Instance.circleHitZone.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.circleHitMark_P1.position - transform.position).normalized;
                     break;
                 case "Square":
-                    moveDirection = (GameManager.Instance.squareHitZone.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.squareHitMark_P1.position - transform.position).normalized;
                     break;
                 case "Triangle":
-                    moveDirection = (GameManager.Instance.triangleHitZone.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.triangleHitMark_P1.position - transform.position).normalized;
                     break;
                 case "Diamond":
-                    moveDirection = (GameManager.Instance.diamondHitZone.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.diamondHitMark_P1.position - transform.position).normalized;
                     break;
             }
         }
@@ -57,27 +59,30 @@ public class FallingInputController : MonoBehaviour
             switch(fallingInput.inputName)
             {
                 case "Circle":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.circleHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.circleHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
                 case "Square":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.squareHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.squareHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
                 case "Triangle":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.triangleHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.triangleHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
                 case "Diamond":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.diamondHitZone.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.diamondHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
             }  
         }
         else
-            DisableScript();
-            
+        {
+           transform.Translate(GameManager.Instance.scrollSpeed * Time.deltaTime * moveDirection); 
+           StartCoroutine(DisableScript());
+        }
     }
 
-    private void DisableScript()
+    private IEnumerator DisableScript()
     {
-        this.enabled = false;
+        yield return new WaitForSeconds(5);
+        enabled = false;
     }
     
     void Awake()
