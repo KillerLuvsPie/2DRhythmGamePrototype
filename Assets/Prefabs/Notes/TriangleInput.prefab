@@ -70,15 +70,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1419237131
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 9499c7bf96e34cd4f98759d32dc61396, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.5, y: 2.25}
+  m_Size: {x: 3.05, y: 2.79}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -156,8 +156,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1419237131
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5ffccbfeae21f48478e3dd9367608cdf, type: 3}
   m_Color: {r: 0, g: 1, b: 0, a: 1}
@@ -185,5 +185,7 @@ MonoBehaviour:
   fallingInput: {fileID: 11400000, guid: c062e0ea89bc3b446ab9f1a5e8f1d90b, type: 2}
   inputTime: 0
   moveDirection: {x: 0, y: 0, z: 0}
+  playerNum: 0
   isActive: 1
   canMove: 0
+  outlineRenderer: {fileID: 2604480197202277486}

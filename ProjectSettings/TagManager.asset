@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: HitMarkers
+    uniqueID: 4132284643
+    locked: 0
+  - name: Notes
+    uniqueID: 2875730165
+    locked: 0

@@ -116,7 +116,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 else if(Input.GetKeyUp(triangleKeys[i]))
                 {
-                    InputUp(HelperClass.darkGreen, triangleMarkRenderers[i], out isSquareHeld[i]);
+                    InputUp(HelperClass.darkGreen, triangleMarkRenderers[i], out isTriangleHeld[i]);
                 }
                 //DIAMOND INPUT
                 if(Input.GetKeyDown(diamondKeys[i]))

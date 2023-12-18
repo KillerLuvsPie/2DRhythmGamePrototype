@@ -104,13 +104,6 @@ public class GameManager : MonoBehaviour
         timerUI.text = minutes.ToString("00") + ":" + seconds.ToString("00");
     }
 
-    //NOTE SCROLL FUNCTION (OBSOLETE ... DELETE THIS AFTER NEW MOVE METHOD IS COMPLETE OR CHANGE TO SOMETHING ELSE)
-    private void ScrollNotes(int index)
-    {
-        noteCharts[index].Translate(0,-scrollSpeed * Time.deltaTime,0);
-        //inputChart.position = new Vector2(0, -currentTime * scrollSpeed);
-    }
-
     //END OF MUSIC FUNCTION
     private void CheckIfMusicIsDone()
     {
@@ -160,6 +153,29 @@ public class GameManager : MonoBehaviour
         return color = new Color(color.r, color.g, color.b, alpha);
     }
 
+    //PRINT NOTES FOR DEBUGGING PURPOSES
+    private void PrintNoteLists()
+    {
+        for(int i = 0; i < circleLists.Length; i++)
+        {
+            for(int j = 0; j < circleLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Circle List, Pos " + j + ": " + circleLists[i][j].name);
+            }
+            for(int j = 0; j < squareLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Square List, Pos " + j + ": " + squareLists[i][j].name);
+            }
+            for(int j = 0; j < triangleLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Triangle List, Pos " + j + ": " + triangleLists[i][j].name);
+            }
+            for(int j = 0; j < diamondLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Diamond List, Pos " + j + ": " + diamondLists[i][j].name);
+            }
+        }
+    }
     private void ShowHitMessage(int index, float distance)
     {
         if(distance <= Mathf.Lerp(0, inputRange, 0.5f))
@@ -192,6 +208,7 @@ public class GameManager : MonoBehaviour
         {
             case HelperClass.InputType.Circle:
                 circleLists[index][circleListIndexes[index]].color = AddTransparencyToUsedNote(circleLists[index][circleListIndexes[index]].color, alpha);
+                circleLists[index][circleListIndexes[index]].GetComponent<FallingInputController>().outlineRenderer.enabled = false;
                 circleLists[index][circleListIndexes[index]].GetComponent<FallingInputController>().isActive = false;
                 distance = Vector3.Distance(circleLists[index][circleListIndexes[index]].transform.position, circleHitMarks[index].position);
                 if(circleListIndexes[index] < circleLists[index].Count-1)
@@ -199,6 +216,7 @@ public class GameManager : MonoBehaviour
                 break;
             case HelperClass.InputType.Square:
                 squareLists[index][squareListIndexes[index]].color = AddTransparencyToUsedNote(squareLists[index][squareListIndexes[index]].color, alpha);
+                squareLists[index][squareListIndexes[index]].GetComponent<FallingInputController>().outlineRenderer.enabled = false;
                 squareLists[index][squareListIndexes[index]].GetComponent<FallingInputController>().isActive = false;
                 distance = Vector3.Distance(squareLists[index][squareListIndexes[index]].transform.position, squareHitMarks[index].position);
                 if(squareListIndexes[index] < squareLists[index].Count-1)
@@ -206,6 +224,7 @@ public class GameManager : MonoBehaviour
                 break;
             case HelperClass.InputType.Triangle:
                 triangleLists[index][triangleListIndexes[index]].color = AddTransparencyToUsedNote(triangleLists[index][triangleListIndexes[index]].color, alpha);
+                triangleLists[index][triangleListIndexes[index]].GetComponent<FallingInputController>().outlineRenderer.enabled = false;
                 triangleLists[index][triangleListIndexes[index]].GetComponent<FallingInputController>().isActive = false;
                 distance = Vector3.Distance(triangleLists[index][triangleListIndexes[index]].transform.position, triangleHitMarks[index].position);
                 if(triangleListIndexes[index] < triangleLists[index].Count-1)
@@ -213,6 +232,7 @@ public class GameManager : MonoBehaviour
                 break;
             case HelperClass.InputType.Diamond:
                 diamondLists[index][diamondListIndexes[index]].color = AddTransparencyToUsedNote(diamondLists[index][diamondListIndexes[index]].color, alpha);
+                diamondLists[index][diamondListIndexes[index]].GetComponent<FallingInputController>().outlineRenderer.enabled = false;
                 diamondLists[index][diamondListIndexes[index]].GetComponent<FallingInputController>().isActive = false;
                 distance = Vector3.Distance(diamondLists[index][diamondListIndexes[index]].transform.position, diamondHitMarks[index].position);
                 if(diamondListIndexes[index] < diamondLists[index].Count-1)
@@ -304,32 +324,6 @@ public class GameManager : MonoBehaviour
     }
 
     //NOTE ACTIVATION FUNCTIONS
-    private void SetActivationTime(int index, string noteType)
-    {
-        switch(noteType)
-        {
-            case "Circle":
-                if(circleActivationIndexes[index] < circleLists[index].Count-1)
-                    circleActivationTimes[index] = circleLists[index][circleActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
-                break;
-            case "Square":
-                if(squareActivationIndexes[index] < squareLists[index].Count-1)
-                    squareActivationTimes[index] = squareLists[index][squareActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
-                break;
-            case "Triangle":
-                if(triangleActivationIndexes[index] < triangleLists[index].Count-1)
-                    triangleActivationTimes[index] = triangleLists[index][triangleActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
-                break;
-            case "Diamond":
-                if(diamondActivationIndexes[index] < diamondLists[index].Count-1)
-                    diamondActivationTimes[index] = diamondLists[index][diamondActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
-                break;
-            default:
-                print("SetActivationTime has received an invalid string: " + noteType);
-                break;
-        }
-    }
-
     private void ActivateNote(int index, string noteType)
     {
         switch(noteType)
@@ -356,6 +350,60 @@ public class GameManager : MonoBehaviour
         }
         SetActivationTime(index, noteType);
     }
+
+    private void SetActivationTime(int index, string noteType)
+    {
+        switch(noteType)
+        {
+            case "Circle":
+                if(circleActivationIndexes[index] < circleLists[index].Count-1)
+                    circleActivationTimes[index] = circleLists[index][circleActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
+                break;
+            case "Square":
+                if(squareActivationIndexes[index] < squareLists[index].Count-1)
+                    squareActivationTimes[index] = squareLists[index][squareActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
+                break;
+            case "Triangle":
+                if(triangleActivationIndexes[index] < triangleLists[index].Count-1)
+                    triangleActivationTimes[index] = triangleLists[index][triangleActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
+                break;
+            case "Diamond":
+                if(diamondActivationIndexes[index] < diamondLists[index].Count-1)
+                    diamondActivationTimes[index] = diamondLists[index][diamondActivationIndexes[index]].GetComponent<FallingInputController>().inputTime;
+                break;
+            default:
+                print("SetActivationTime has received an invalid string: " + noteType);
+                break;
+        }
+    }
+    //SET SORTING LAYER INDEX OF NOTES
+    private void SetSortingLayers()
+    {
+        for(int i = 0; i < circleLists.Length; i++)
+        {
+            for(int j = 0; j < circleLists[i].Count - 1; j++)
+            {
+                circleLists[i][j].sortingOrder = circleLists[i].Count - 1 - j;
+                circleLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = circleLists[i].Count - 1 - j;
+            }
+            for(int j = 0; j < squareLists[i].Count - 1; j++)
+            {
+                squareLists[i][j].sortingOrder = squareLists[i].Count - 1 - j;
+                squareLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = squareLists[i].Count - 1 - j;
+            }
+            for(int j = 0; j < triangleLists[i].Count - 1; j++)
+            {
+                triangleLists[i][j].sortingOrder = triangleLists[i].Count - 1 - j;
+                triangleLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = triangleLists[i].Count - 1 - j;
+            }
+            for(int j = 0; j < diamondLists[i].Count - 1; j++)
+            {
+                diamondLists[i][j].sortingOrder = diamondLists[i].Count - 1 - j;
+                diamondLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = diamondLists[i].Count - 1 - j;
+            }
+        }
+    }
+
     //START OF GAME COUNTDOWN
     private IEnumerator Countdown()
     {
@@ -424,27 +472,13 @@ public class GameManager : MonoBehaviour
             diamondLists[i].Add(LastNotes[3]);
         }
         
-        /* UNCOMMENT IF IT IS NECESSARY TO CHECK WHAT IS IN THE LISTS
-        for(int i = 0; i < circleList.Count; i++)
-        {
-            print("Circle List, Pos " + i + ": " + circleList[i].name);
-        }
-        for(int i = 0; i < squareList.Count; i++)
-        {
-            print("Square List, Pos " + i + ": " + squareList[i].name);
-        }
-        for(int i = 0; i < triangleList.Count; i++)
-        {
-            print("Triangle List, Pos " + i + ": " + triangleList[i].name);
-        }
-        for(int i = 0; i < diamondList.Count; i++)
-        {
-            print("Diamond List, Pos " + i + ": " + diamondList[i].name);
-        }*/
+        // UNCOMMENT IF IT IS NECESSARY TO CHECK WHAT IS IN THE LISTS
+        //PrintNoteLists();
     }
 
     void Start()
     {
+        SetSortingLayers();
         countdown.text = "";
         for(int i = 0; i < hitIndicators.Length; i++)
         {
@@ -456,7 +490,7 @@ public class GameManager : MonoBehaviour
         }
         StartCoroutine(Countdown());
     }
-    // Update is called once per frame
+
     void Update()
     {
         if(started)
