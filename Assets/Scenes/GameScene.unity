@@ -128,11 +128,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7047872625363381094, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}
---- !u!212 &82036930 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8512126168262004116, guid: 822f096cf05c6634b912018c1973905e, type: 3}
-  m_PrefabInstance: {fileID: 7403111106900258162}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &268861545
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,20 +206,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerUI: {fileID: 546420282}
   countdown: {fileID: 1145412562}
-  scoreUI_P1: {fileID: 808076281}
-  comboUI_P1: {fileID: 739844363}
-  hitIndicator_P1: {fileID: 1570433846}
-  scoreUI_P2: {fileID: 1652864000}
-  comboUI_P2: {fileID: 905619235}
-  hitIndicator_P2: {fileID: 736964058}
-  circleHitMark_P1: {fileID: 1690126614}
-  squareHitMark_P1: {fileID: 1490380929}
-  triangleHitMark_P1: {fileID: 1214305624}
-  diamondHitMark_P1: {fileID: 993453305}
-  circleHitMark_P2: {fileID: 14980549}
-  squareHitMark_P2: {fileID: 712460757}
-  triangleHitMark_P2: {fileID: 1368983406}
-  diamondHitMark_P2: {fileID: 845449867}
+  scoreUIS:
+  - {fileID: 808076281}
+  - {fileID: 1652864000}
+  comboUIS:
+  - {fileID: 739844363}
+  - {fileID: 905619235}
+  hitIndicators:
+  - {fileID: 1570433846}
+  - {fileID: 736964058}
+  circleHitMarks:
+  - {fileID: 1690126614}
+  - {fileID: 14980549}
+  squareHitMarks:
+  - {fileID: 1490380929}
+  - {fileID: 712460757}
+  triangleHitMarks:
+  - {fileID: 1214305624}
+  - {fileID: 1368983406}
+  diamondHitMarks:
+  - {fileID: 993453305}
+  - {fileID: 845449867}
   currentTime: 0
   started: 0
   audioSource: {fileID: 285629778}
@@ -241,21 +243,14 @@ MonoBehaviour:
   squareNote: {fileID: 8442972250954169496, guid: af9411f934e2c2848b5a5438d56fa697, type: 3}
   triangleNote: {fileID: 8442972250954169496, guid: 67eb72d463d9e4b49b43ad0afb72e973, type: 3}
   diamondNote: {fileID: 8442972250954169496, guid: 2b9625b4abe8765408eb55e63e08b3c9, type: 3}
-  noteChart_P1: {fileID: 8517868295059662812}
-  noteChart_P2: {fileID: 268861546}
-  circleList_P1: []
-  squareList_P1: []
-  triangleList_P1: []
-  diamondList_P1: []
-  circleList_P2: []
-  squareList_P2: []
-  triangleList_P2: []
-  diamondList_P2: []
+  noteCharts:
+  - {fileID: 8517868295059662812}
+  - {fileID: 268861546}
   LastNotes:
-  - {fileID: 1705816279}
-  - {fileID: 1879068996}
-  - {fileID: 82036930}
-  - {fileID: 1191924074}
+  - {fileID: 7403111106900258166}
+  - {fileID: 7403111106900258165}
+  - {fileID: 7403111106900258164}
+  - {fileID: 7403111106900258163}
 --- !u!82 &285629778
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1420,11 +1415,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145412560}
   m_CullTransparentMesh: 1
---- !u!212 &1191924074 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 1222368844591083031, guid: 822f096cf05c6634b912018c1973905e, type: 3}
-  m_PrefabInstance: {fileID: 7403111106900258162}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1214305624 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2596552953875661283, guid: 822f096cf05c6634b912018c1973905e, type: 3}
@@ -1785,16 +1775,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8816120493637526816, guid: 822f096cf05c6634b912018c1973905e, type: 3}
   m_PrefabInstance: {fileID: 7403111106900258162}
   m_PrefabAsset: {fileID: 0}
---- !u!212 &1705816279 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 3054082622367670835, guid: 822f096cf05c6634b912018c1973905e, type: 3}
-  m_PrefabInstance: {fileID: 7403111106900258162}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &1879068996 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 3295796624198662263, guid: 822f096cf05c6634b912018c1973905e, type: 3}
-  m_PrefabInstance: {fileID: 7403111106900258162}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1900426823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1966,6 +1946,10 @@ PrefabInstance:
     - target: {fileID: 1064301053246979290, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1089283965791111778, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: TriangleHitMarkP2
       objectReference: {fileID: 0}
     - target: {fileID: 1127402116101747579, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
@@ -2207,6 +2191,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2903658415338277565, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: SquareHitMarkP1
+      objectReference: {fileID: 0}
     - target: {fileID: 2956357837889994662, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2323,6 +2311,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3889907908020520927, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: CircleHitMarkP2
+      objectReference: {fileID: 0}
     - target: {fileID: 3950190352478123439, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2346,6 +2338,10 @@ PrefabInstance:
     - target: {fileID: 4088754983767409679, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4121632260811800077, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: SquareHitMarkP2
       objectReference: {fileID: 0}
     - target: {fileID: 4125103492079780264, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
@@ -2439,6 +2435,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4722231440593405565, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: DiamondHitMarkP2
+      objectReference: {fileID: 0}
     - target: {fileID: 4763777774519478555, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2470,6 +2470,10 @@ PrefabInstance:
     - target: {fileID: 4984567957703956607, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4990713262797835270, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: TriangleHitMarkP1
       objectReference: {fileID: 0}
     - target: {fileID: 4992686000275423784, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
@@ -2515,6 +2519,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5348403855969790115, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: CircleHitMarkP1
+      objectReference: {fileID: 0}
     - target: {fileID: 5403680080083041312, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Name
       value: NoteWrapper
@@ -2559,6 +2567,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5881469978716568197, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881469978716568197, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881469978716568197, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5928855283936092714, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2570,6 +2590,10 @@ PrefabInstance:
     - target: {fileID: 6113729692392851217, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138689289077542206, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+      propertyPath: m_Name
+      value: DiamondHitMarkP1
       objectReference: {fileID: 0}
     - target: {fileID: 6147021091136189483, guid: 822f096cf05c6634b912018c1973905e, type: 3}
       propertyPath: m_Enabled
@@ -2861,6 +2885,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+--- !u!212 &7403111106900258163 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6733251755334364603, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258164 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6883377751412028017, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258165 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2933338064285082538, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7403111106900258166 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8301373667472226720, guid: 822f096cf05c6634b912018c1973905e, type: 3}
+  m_PrefabInstance: {fileID: 7403111106900258162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8517868295059662812
 Transform:
   m_ObjectHideFlags: 0

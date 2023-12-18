@@ -8,6 +8,7 @@ public class FallingInputController : MonoBehaviour
     public FallingInput fallingInput;
     public float inputTime;
     public Vector3 moveDirection;
+    public int playerNum;
     public bool isActive = true;
     public bool canMove = false;
     private SpriteRenderer spriteRenderer;
@@ -29,16 +30,16 @@ public class FallingInputController : MonoBehaviour
             switch(fallingInput.inputName)
             {
                 case "Circle":
-                    moveDirection = (GameManager.Instance.circleHitMark_P1.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.circleHitMarks[playerNum].position - transform.position).normalized;
                     break;
                 case "Square":
-                    moveDirection = (GameManager.Instance.squareHitMark_P1.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.squareHitMarks[playerNum].position - transform.position).normalized;
                     break;
                 case "Triangle":
-                    moveDirection = (GameManager.Instance.triangleHitMark_P1.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.triangleHitMarks[playerNum].position - transform.position).normalized;
                     break;
                 case "Diamond":
-                    moveDirection = (GameManager.Instance.diamondHitMark_P1.position - transform.position).normalized;
+                    moveDirection = (GameManager.Instance.diamondHitMarks[playerNum].position - transform.position).normalized;
                     break;
             }
         }
@@ -59,16 +60,16 @@ public class FallingInputController : MonoBehaviour
             switch(fallingInput.inputName)
             {
                 case "Circle":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.circleHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.circleHitMarks[playerNum].position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
                 case "Square":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.squareHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.squareHitMarks[playerNum].position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
                 case "Triangle":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.triangleHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.triangleHitMarks[playerNum].position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
                 case "Diamond":
-                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.diamondHitMark_P1.position * 2, Mathf.Abs(CalculateTimeWithDistance()));
+                    transform.position = Vector2.Lerp(Vector2.zero, GameManager.Instance.diamondHitMarks[playerNum].position * 2, Mathf.Abs(CalculateTimeWithDistance()));
                     break;
             }  
         }
@@ -101,29 +102,26 @@ public class FallingInputController : MonoBehaviour
         {
             if(canMove /*&& GameManager.Instance.started*/)
             {
+                MoveTowards();
                 if(fallingInput.inputName == "Circle")
                 {
-                    MoveTowards();
                     if(isActive)
-                        GameManager.Instance.MissedCircle(transform, moveDirection);
+                        GameManager.Instance.MissedInput(playerNum, HelperClass.InputType.Circle, transform, moveDirection);
                 }
                 else if(fallingInput.inputName == "Square")
                 {
-                    MoveTowards();
                     if(isActive)
-                        GameManager.Instance.MissedSquare(transform, moveDirection);
+                        GameManager.Instance.MissedInput(playerNum, HelperClass.InputType.Square, transform, moveDirection);
                 }
                 else if(fallingInput.inputName == "Triangle")
                 {
-                    MoveTowards();
                     if(isActive)
-                        GameManager.Instance.MissedTriangle(transform, moveDirection);
+                        GameManager.Instance.MissedInput(playerNum, HelperClass.InputType.Triangle, transform, moveDirection);
                 }
                 else if(fallingInput.inputName == "Diamond")
                 {
-                    MoveTowards();
                     if(isActive)
-                        GameManager.Instance.MissedDiamond(transform, moveDirection);
+                        GameManager.Instance.MissedInput(playerNum, HelperClass.InputType.Diamond, transform, moveDirection);
                 }
             }
         }
