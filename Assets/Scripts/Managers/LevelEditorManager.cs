@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 
 public class LevelEditorManager : MonoBehaviour
 {
+    #region VARIABLES
     //SINGLETON
     public static LevelEditorManager Instance;
     
@@ -58,8 +59,10 @@ public class LevelEditorManager : MonoBehaviour
     private List<GameObject> triangleList = new List<GameObject>();
     private List<GameObject> diamondList = new List<GameObject>();
     public SpriteRenderer[] LastNotes;
+    
+    #endregion VARIABLES
 
-    //FUNCTIONS
+    #region CUSTOM FUNCTIONS
     //NOTE CREATION
     public void CreateCircle()
     {
@@ -296,8 +299,9 @@ public class LevelEditorManager : MonoBehaviour
         coroutine = Countdown();
         isPlaying = false;
     }
+    #endregion CUSTOM FUNCTIONS
 
-    //UNITY FUNCTIONS
+    #region UNITY FUNCTIONS
     void Awake()
     {
         /*circleList.Add(LastNotes[0]);
@@ -325,4 +329,5 @@ public class LevelEditorManager : MonoBehaviour
             ScrollNotes();
         }
     }
+    #endregion UNITY FUNCTIONS
 }

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -55,10 +54,16 @@ public class GameManager : MonoBehaviour
     public float baseTranslateDuration = 2;
 
     //REFERENCES
+    //PREFABS
     public GameObject circleNote;
     public GameObject squareNote;
     public GameObject triangleNote;
     public GameObject diamondNote;
+
+    //BACKGROUND EFFECTS
+    public SpriteRenderer[] bgEffects = new SpriteRenderer[2];
+
+    //NOTE CHART PARENT OBJECTS
     public Transform[] noteCharts = new Transform[2];
 
     //NOTE LISTS
@@ -79,7 +84,7 @@ public class GameManager : MonoBehaviour
     private int[] triangleActivationIndexes = new int[2] {0,0};
     private int[] diamondActivationIndexes = new int[2] {0,0};
 
-    //NOTE ACTIvATION TIMES
+    //NOTE ACTIVATION TIMES
     private double[] circleActivationTimes = new double[2];
     private double[] squareActivationTimes = new double[2];
     private double[] triangleActivationTimes = new double[2];
@@ -90,6 +95,71 @@ public class GameManager : MonoBehaviour
     #endregion VARIABLES
 
     #region CUSTOM FUNCTIONS
+    //PRINT NOTES FOR DEBUGGING PURPOSES
+    private void PrintNoteLists()
+    {
+        for(int i = 0; i < circleLists.Length; i++)
+        {
+            for(int j = 0; j < circleLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Circle List, Pos " + j + ": " + circleLists[i][j].name);
+            }
+            for(int j = 0; j < squareLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Square List, Pos " + j + ": " + squareLists[i][j].name);
+            }
+            for(int j = 0; j < triangleLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Triangle List, Pos " + j + ": " + triangleLists[i][j].name);
+            }
+            for(int j = 0; j < diamondLists[i].Count; j++)
+            {
+                print("Player " + i + " list | Diamond List, Pos " + j + ": " + diamondLists[i][j].name);
+            }
+        }
+    }
+
+    //ROTATE BG EFFECT
+    private void RotateBGEffect()
+    {
+        for(int i = 0; i < bgEffects.Length; i++)
+            bgEffects[i].transform.Rotate(0,0, Random.Range(75, 126) * Time.deltaTime);
+    }
+
+    private void SortBGEffects()
+    {
+        if(scores[0] >= scores[1])
+        {
+            bgEffects[0].sortingOrder = 1;
+            bgEffects[1].sortingOrder = 0;
+        }
+        else
+        {
+            bgEffects[0].sortingOrder = 0;
+            bgEffects[1].sortingOrder = 1;
+        }  
+    }
+
+    private void ChangeBGEffectAlpha(int index, bool increase)
+    {
+        if(increase)
+        {
+            if(bgEffects[index].color.a < 1)
+            {
+                bgEffects[index].transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
+                bgEffects[index].color += HelperClass.bgAlphaChange;
+            }
+        }
+        else
+        {
+            if(bgEffects[index].color.a > 0)
+            {
+                bgEffects[index].transform.localScale -= new Vector3(0.1f , 0.1f, 0.1f);
+                bgEffects[index].color -= HelperClass.bgAlphaChange;
+            }      
+        }
+    }
+
     //TIMER FUNCTION
     void CalculateTime()
     {
@@ -113,13 +183,16 @@ public class GameManager : MonoBehaviour
     //POINTS FUNCTIONS
     public void IncreaseScore(int index, int increment)
     {
-        
-            scores[index] += increment + combos[index]/10;
-            scoreUIS[index].text = "Score:" + scores[index].ToString("000000"); 
+        ChangeBGEffectAlpha(index, true);
+        SortBGEffects();
+        scores[index] += increment + combos[index]/10;
+        scoreUIS[index].text = "Score:" + scores[index].ToString("000000");
     }
 
     public void DecreaseScore(int index, int decrement)
     {
+        ChangeBGEffectAlpha(index, false);
+        SortBGEffects();
         scores[index] -= decrement;
         scoreUIS[index].text = "Score:" + scores[index].ToString("000000");
     }
@@ -153,29 +226,6 @@ public class GameManager : MonoBehaviour
         return color = new Color(color.r, color.g, color.b, alpha);
     }
 
-    //PRINT NOTES FOR DEBUGGING PURPOSES
-    private void PrintNoteLists()
-    {
-        for(int i = 0; i < circleLists.Length; i++)
-        {
-            for(int j = 0; j < circleLists[i].Count; j++)
-            {
-                print("Player " + i + " list | Circle List, Pos " + j + ": " + circleLists[i][j].name);
-            }
-            for(int j = 0; j < squareLists[i].Count; j++)
-            {
-                print("Player " + i + " list | Square List, Pos " + j + ": " + squareLists[i][j].name);
-            }
-            for(int j = 0; j < triangleLists[i].Count; j++)
-            {
-                print("Player " + i + " list | Triangle List, Pos " + j + ": " + triangleLists[i][j].name);
-            }
-            for(int j = 0; j < diamondLists[i].Count; j++)
-            {
-                print("Player " + i + " list | Diamond List, Pos " + j + ": " + diamondLists[i][j].name);
-            }
-        }
-    }
     private void ShowHitMessage(int index, float distance)
     {
         if(distance <= Mathf.Lerp(0, inputRange, 0.5f))
@@ -383,27 +433,30 @@ public class GameManager : MonoBehaviour
         {
             for(int j = 0; j < circleLists[i].Count - 1; j++)
             {
-                circleLists[i][j].sortingOrder = circleLists[i].Count - 1 - j;
-                circleLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = circleLists[i].Count - 1 - j;
+                circleLists[i][j].sortingOrder = circleLists[i].Count * 2 - 1 - j * 2;
+                circleLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = circleLists[i].Count * 2 - j * 2;
             }
             for(int j = 0; j < squareLists[i].Count - 1; j++)
             {
-                squareLists[i][j].sortingOrder = squareLists[i].Count - 1 - j;
-                squareLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = squareLists[i].Count - 1 - j;
+                squareLists[i][j].sortingOrder = squareLists[i].Count * 2 - 1 - j * 2;
+                squareLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = squareLists[i].Count * 2 - j + 2;
             }
             for(int j = 0; j < triangleLists[i].Count - 1; j++)
             {
-                triangleLists[i][j].sortingOrder = triangleLists[i].Count - 1 - j;
-                triangleLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = triangleLists[i].Count - 1 - j;
+                triangleLists[i][j].sortingOrder = triangleLists[i].Count * 2 - 1 - j * 2;
+                triangleLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = triangleLists[i].Count * 2 - j * 2;
             }
             for(int j = 0; j < diamondLists[i].Count - 1; j++)
             {
-                diamondLists[i][j].sortingOrder = diamondLists[i].Count - 1 - j;
-                diamondLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = diamondLists[i].Count - 1 - j;
+                diamondLists[i][j].sortingOrder = diamondLists[i].Count * 2 - 1 - j * 2;
+                diamondLists[i][j].GetComponent<FallingInputController>().outlineRenderer.sortingOrder = diamondLists[i].Count * 2 - j * 2;
             }
         }
     }
 
+    #endregion CUSTOM FUNCTIONS
+
+    #region COROUTINES
     //START OF GAME COUNTDOWN
     private IEnumerator Countdown()
     {
@@ -424,7 +477,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    #endregion CUSTOM FUNCTIONS
+
+    #endregion COROUTINES
 
     #region UNITY FUNCTIONS
     void Awake()
@@ -471,8 +525,7 @@ public class GameManager : MonoBehaviour
             triangleLists[i].Add(LastNotes[2]);
             diamondLists[i].Add(LastNotes[3]);
         }
-        
-        // UNCOMMENT IF IT IS NECESSARY TO CHECK WHAT IS IN THE LISTS
+        // UNCOMMENT IF IT'S NECESSARY TO CHECK WHAT IS IN THE LISTS
         //PrintNoteLists();
     }
 
@@ -493,6 +546,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        RotateBGEffect();
         if(started)
         {
             CalculateTime();
@@ -509,5 +563,6 @@ public class GameManager : MonoBehaviour
                 ActivateNote(i, "Diamond");
         }
     }
+
     #endregion UNITY FUNCTIONS
 }

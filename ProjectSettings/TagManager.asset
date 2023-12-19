@@ -44,6 +44,15 @@ TagManager:
   - name: HitMarkers
     uniqueID: 4132284643
     locked: 0
-  - name: Notes
+  - name: DiamondNotes
     uniqueID: 2875730165
+    locked: 0
+  - name: TriangleNotes
+    uniqueID: 4034448247
+    locked: 0
+  - name: SquareNotes
+    uniqueID: 1949124981
+    locked: 0
+  - name: CircleNotes
+    uniqueID: 3356618477
     locked: 0

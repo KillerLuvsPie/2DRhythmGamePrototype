@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerLvEditorManager : MonoBehaviour
 {
+    #region VARIABLES
     //SINGLETON
     public static PlayerLvEditorManager Instance;
     //HIT MARKERS
@@ -11,22 +12,15 @@ public class PlayerLvEditorManager : MonoBehaviour
     public SpriteRenderer squareHitMarker;
     public SpriteRenderer triangleHitMarker;
     public SpriteRenderer diamondHitMarker;
-    //HIT MARKER COLORS
-    private Color red = new Color(1,0,0,1);
-    private Color darkRed = new Color(0.25f,0,0,1);
-    private Color blue = new Color(0,0,1,1);
-    private Color darkBlue = new Color(0,0,0.25f,1);
-    private Color green = new Color(0,1,0,1);
-    private Color darkGreen = new Color(0,0.25f,0,1);
-    private Color yellow = new Color(1,1,0,1);
-    private Color darkYellow = new Color(0.25f,0.25f,0,1);
-    private Color white = new Color(1,1,1,1);
     //CONTROL VARIABLES
     private bool isCircleHeld = false;
     private bool isSquareHeld = false;
     private bool isTriangleHeld = false;
     private bool isDiamondHeld = false;
-    //UNITY FUNCTIONS
+
+    #endregion VARIABLES
+
+    #region UNITY FUNCTIONS
     void Awake()
     {
         if(Instance != null && Instance != this)
@@ -36,10 +30,10 @@ public class PlayerLvEditorManager : MonoBehaviour
     }
     void Start()
     {
-        circleHitMarker.color = darkRed;
-        squareHitMarker.color = darkBlue;
-        triangleHitMarker.color = darkGreen;
-        diamondHitMarker.color = darkYellow;
+        circleHitMarker.color = HelperClass.darkRed;
+        squareHitMarker.color = HelperClass.darkBlue;
+        triangleHitMarker.color = HelperClass.darkGreen;
+        diamondHitMarker.color = HelperClass.darkYellow;
     }
     void Update()
     {
@@ -47,7 +41,7 @@ public class PlayerLvEditorManager : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.A))
             {
-                circleHitMarker.color = red;
+                circleHitMarker.color = HelperClass.red;
                 if(isCircleHeld == false)
                 {
                     isCircleHeld = true;
@@ -56,12 +50,12 @@ public class PlayerLvEditorManager : MonoBehaviour
             }
             else if(Input.GetKeyUp(KeyCode.A))
             {
-                circleHitMarker.color = darkRed;
+                circleHitMarker.color = HelperClass.darkRed;
                 isCircleHeld = false;
             }
             if(Input.GetKeyDown(KeyCode.S))
             {
-                squareHitMarker.color = blue;
+                squareHitMarker.color = HelperClass.blue;
                 if(isSquareHeld == false)
                 {
                     isSquareHeld = true;
@@ -70,12 +64,12 @@ public class PlayerLvEditorManager : MonoBehaviour
             }
             else if(Input.GetKeyUp(KeyCode.S))
             {
-                squareHitMarker.color = darkBlue;
+                squareHitMarker.color = HelperClass.darkBlue;
                 isSquareHeld = false;
             }
             if(Input.GetKeyDown(KeyCode.G))
             {
-                triangleHitMarker.color = green;
+                triangleHitMarker.color = HelperClass.green;
                 if(isTriangleHeld == false)
                 {
                     isTriangleHeld = true;
@@ -84,12 +78,12 @@ public class PlayerLvEditorManager : MonoBehaviour
             }
             else if(Input.GetKeyUp(KeyCode.G))
             {
-                triangleHitMarker.color = darkGreen;
+                triangleHitMarker.color = HelperClass.darkGreen;
                 isTriangleHeld = false;
             }
             if(Input.GetKeyDown(KeyCode.H))
             {
-                diamondHitMarker.color = yellow;
+                diamondHitMarker.color = HelperClass.yellow;
                 if(isDiamondHeld == false)
                 {
                     isDiamondHeld = true;
@@ -98,9 +92,11 @@ public class PlayerLvEditorManager : MonoBehaviour
             }
             else if(Input.GetKeyUp(KeyCode.H))
             {
-                diamondHitMarker.color = darkYellow;
+                diamondHitMarker.color = HelperClass.darkYellow;
                 isDiamondHeld = false;
             }
         }
     }
+
+    #endregion UNITY FUNCTIONS
 }

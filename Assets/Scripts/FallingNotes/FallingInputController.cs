@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class FallingInputController : MonoBehaviour
 {
+    #region VARIABLES
     public FallingInput fallingInput;
     public float inputTime;
     public Vector3 moveDirection;
@@ -14,6 +15,9 @@ public class FallingInputController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public SpriteRenderer outlineRenderer;
     
+    #endregion VARIABLES
+
+    #region CUSTOM FUNCTIONS
     void PrepareNote()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -86,6 +90,9 @@ public class FallingInputController : MonoBehaviour
         enabled = false;
     }
     
+    #endregion CUSTOM FUNCTIONS
+
+    #region UNITY FUNCTIONS
     void Awake()
     {
         PrepareNote();
@@ -126,7 +133,10 @@ public class FallingInputController : MonoBehaviour
             }
         }
     }
+    #endregion UNITY FUNCTIONS
 }
+
+#region NOTES
 /*
 NOTE TIME FOR CHART:
 
@@ -146,5 +156,5 @@ STARTS AT 00:14 AND REPEATS EVERY 3.5 SECONDS
 00:16.425
 00:16.65
 00:16.75
-
 */
+#endregion NOTES

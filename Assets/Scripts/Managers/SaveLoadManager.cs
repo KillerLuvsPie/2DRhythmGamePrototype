@@ -7,11 +7,16 @@ using UnityEditor;
 
 public static class SaveLoadManager
 {
+    #region VARIABLES
     //SAVE VARUABLES
     [SerializeField]
     public static List<int> inputTypeCountList = new List<int>();
     [SerializeField]
     public static List<float> inputTimeList = new List<float>();
+
+    #endregion VARIABLES
+
+    #region CUSTOM FUNCTIONS
     //SAVE CHART FUNCTION
     public static void SaveChart(string fileName)
     {
@@ -85,4 +90,5 @@ public static class SaveLoadManager
             //SETUP SAVE FILE IF IT DOES NOT EXIST
         }
     }
+    #endregion CUSTOM FUNCTIONS
 }
