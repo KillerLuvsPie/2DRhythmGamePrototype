@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -37,7 +39,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int scoreDecrementIfMiss = 3;
     [SerializeField]
-    private int scoreDecrementIfWrong = 5;
+    private int scoreDecrementIfWrong = 2;
     private int[] combos = new int[2];
     [SerializeField]
     public float scrollSpeed = 1;
@@ -60,8 +62,18 @@ public class GameManager : MonoBehaviour
     public GameObject triangleNote;
     public GameObject diamondNote;
 
-    //BACKGROUND EFFECTS
-    public SpriteRenderer[] bgEffects = new SpriteRenderer[2];
+    //BACKGROUND EFFECT VARIABLES
+    public List<SpriteRenderer> bgObjects = new List<SpriteRenderer>();
+    public GameObject bgObjectWrapper;
+    public Image[] bgEffects;
+    private IEnumerator blueBGEffectResetter;
+    private IEnumerator greenBGEffectResetter;
+    private bool isBlueBGCoroutineRunning = false;
+    private bool isGreenBGCoroutineRunning = false;
+    [SerializeField]
+    private int blueEffectCounter = 0;
+    [SerializeField]
+    private int greenEffectCounter = 0;
 
     //NOTE CHART PARENT OBJECTS
     public Transform[] noteCharts = new Transform[2];
@@ -122,42 +134,8 @@ public class GameManager : MonoBehaviour
     //ROTATE BG EFFECT
     private void RotateBGEffect()
     {
-        for(int i = 0; i < bgEffects.Length; i++)
-            bgEffects[i].transform.Rotate(0,0, Random.Range(75, 126) * Time.deltaTime);
-    }
-
-    private void SortBGEffects()
-    {
-        if(scores[0] >= scores[1])
-        {
-            bgEffects[0].sortingOrder = 1;
-            bgEffects[1].sortingOrder = 0;
-        }
-        else
-        {
-            bgEffects[0].sortingOrder = 0;
-            bgEffects[1].sortingOrder = 1;
-        }  
-    }
-
-    private void ChangeBGEffectAlpha(int index, bool increase)
-    {
-        if(increase)
-        {
-            if(bgEffects[index].color.a < 1)
-            {
-                bgEffects[index].transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
-                bgEffects[index].color += HelperClass.bgAlphaChange;
-            }
-        }
-        else
-        {
-            if(bgEffects[index].color.a > 0)
-            {
-                bgEffects[index].transform.localScale -= new Vector3(0.1f , 0.1f, 0.1f);
-                bgEffects[index].color -= HelperClass.bgAlphaChange;
-            }      
-        }
+        for(int i = 0; i < bgObjects.Count; i++)
+            bgObjects[i].transform.Rotate(0,0, Random.Range(75, 126) * Time.deltaTime);
     }
 
     //TIMER FUNCTION
@@ -183,16 +161,31 @@ public class GameManager : MonoBehaviour
     //POINTS FUNCTIONS
     public void IncreaseScore(int index, int increment)
     {
-        ChangeBGEffectAlpha(index, true);
-        SortBGEffects();
+        if(index == 0)
+        {
+            AddBGObjectToBlue();
+            if(isGreenBGCoroutineRunning)
+                bgEffects[0].enabled = true;
+            else
+                ResetBlueBGEffect();
+        }
+            
+        else
+        {
+            AddBGObjectToGreen();
+            if(isBlueBGCoroutineRunning)
+                bgEffects[1].enabled = true;
+            else
+                ResetGreenBGEffect();
+        }
+            
         scores[index] += increment + combos[index]/10;
         scoreUIS[index].text = "Score:" + scores[index].ToString("000000");
     }
 
     public void DecreaseScore(int index, int decrement)
     {
-        ChangeBGEffectAlpha(index, false);
-        SortBGEffects();
+        //ChangeBGEffectAlpha(index, false);
         scores[index] -= decrement;
         scoreUIS[index].text = "Score:" + scores[index].ToString("000000");
     }
@@ -204,6 +197,10 @@ public class GameManager : MonoBehaviour
 
     public void ResetCombo(int index)
     {
+        if(index == 0)
+            ResetAllBlueObjects();
+        else
+            ResetAllGreenObjects();
         combos[index] = 0;
         comboUIS[index].text = "Combo:" + combos[index].ToString("000");
     }
@@ -454,6 +451,70 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //BACKGROUND EFFECTS
+    private void ResetBlueBGEffect()
+    {
+        StopCoroutine(blueBGEffectResetter);
+        Camera.main.backgroundColor = new Color(Camera.main.backgroundColor.r, Camera.main.backgroundColor.g, 0, Camera.main.backgroundColor.a);
+        bgEffects[1].color = new Color(bgEffects[1].color.r, bgEffects[1].color.g, bgEffects[1].color.b, 0);
+        bgEffects[1].enabled = false;
+        blueBGEffectResetter = BackgroundEffectBlue();
+        StartCoroutine(blueBGEffectResetter);
+    }
+
+    private void ResetGreenBGEffect()
+    {
+        StopCoroutine(greenBGEffectResetter);
+        Camera.main.backgroundColor = new Color(Camera.main.backgroundColor.r, 0, Camera.main.backgroundColor.b, Camera.main.backgroundColor.a);
+        bgEffects[0].color = new Color(bgEffects[0].color.r, bgEffects[0].color.g, bgEffects[0].color.b, 0);
+        bgEffects[0].enabled = false;
+        greenBGEffectResetter = BackgroundEffectGreen();
+        StartCoroutine(greenBGEffectResetter);
+    }
+
+    private void AddBGObjectToBlue()
+    {
+        if(blueEffectCounter < bgObjects.Count)
+        {
+            if(bgObjects[blueEffectCounter].enabled == true)
+                greenEffectCounter--;
+            bgObjects[blueEffectCounter].color = HelperClass.blue;
+            bgObjects[blueEffectCounter].enabled = true;
+            blueEffectCounter++;
+        }
+        
+    }
+
+    private void AddBGObjectToGreen()
+    {
+        if(bgObjects.Count - greenEffectCounter > 0)
+        {
+            if(bgObjects[bgObjects.Count - 1 - greenEffectCounter].enabled == true)
+                blueEffectCounter--;
+            bgObjects[bgObjects.Count - 1 - greenEffectCounter].color = HelperClass.green;
+            bgObjects[bgObjects.Count - 1 - greenEffectCounter].enabled = true;
+            greenEffectCounter++;
+        } 
+    }
+
+    private void ResetAllBlueObjects()
+    {
+        for(int i = 0; i < blueEffectCounter; i++)
+        {
+            bgObjects[i].enabled = false;
+            bgObjects[i].color = HelperClass.white;
+        }
+        blueEffectCounter = 0;
+    }
+    private void ResetAllGreenObjects()
+    {
+        for(int i = bgObjects.Count; i > bgObjects.Count - greenEffectCounter; i--)
+        {
+            bgObjects[i-1].enabled = false;
+            bgObjects[i-1].color = HelperClass.white;
+        }
+        greenEffectCounter = 0;
+    }
     #endregion CUSTOM FUNCTIONS
 
     #region COROUTINES
@@ -478,6 +539,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator BackgroundEffectBlue()
+    {
+        float interval = 0.02f;
+        isBlueBGCoroutineRunning = true;
+        while(Camera.main.backgroundColor.b < 1)
+        {
+            Camera.main.backgroundColor += HelperClass.playerBGEffectColorSlide[0];
+            bgEffects[1].color += HelperClass.bgAlphaChange;
+            yield return new WaitForSeconds(interval);
+        }
+        yield return new WaitForEndOfFrame();
+        while(Camera.main.backgroundColor.b > 0)
+        {
+            Camera.main.backgroundColor -= HelperClass.playerBGEffectColorSlide[0];
+            bgEffects[1].color -= HelperClass.bgAlphaChange;
+            yield return new WaitForSeconds(interval);
+        }
+        bgEffects[1].enabled = false;
+        isBlueBGCoroutineRunning = false;
+    }
+    private IEnumerator BackgroundEffectGreen()
+    {
+        float interval = 0.02f;
+        isGreenBGCoroutineRunning = true;
+        while(Camera.main.backgroundColor.g < 1)
+        {
+            Camera.main.backgroundColor += HelperClass.playerBGEffectColorSlide[1];
+            bgEffects[0].color += HelperClass.bgAlphaChange;
+            yield return new WaitForSeconds(interval);
+        }
+        yield return new WaitForEndOfFrame();
+        while(Camera.main.backgroundColor.g > 0)
+        {
+            Camera.main.backgroundColor -= HelperClass.playerBGEffectColorSlide[1];
+            bgEffects[0].color -= HelperClass.bgAlphaChange;
+            yield return new WaitForSeconds(interval);
+        }
+        bgEffects[0].enabled = false;
+        isGreenBGCoroutineRunning = false;
+    }
     #endregion COROUTINES
 
     #region UNITY FUNCTIONS
@@ -527,10 +628,15 @@ public class GameManager : MonoBehaviour
         }
         // UNCOMMENT IF IT'S NECESSARY TO CHECK WHAT IS IN THE LISTS
         //PrintNoteLists();
+
+        for(int i = 0; i < bgObjectWrapper.transform.childCount; i++)
+            bgObjects.Add(bgObjectWrapper.transform.GetChild(i).GetComponent<SpriteRenderer>());
     }
 
     void Start()
     {
+        blueBGEffectResetter = BackgroundEffectBlue();
+        greenBGEffectResetter = BackgroundEffectGreen();
         SetSortingLayers();
         countdown.text = "";
         for(int i = 0; i < hitIndicators.Length; i++)

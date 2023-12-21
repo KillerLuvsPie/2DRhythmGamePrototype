@@ -39,27 +39,18 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void InputDown(int index, Color color, SpriteRenderer spriteRenderer, ref bool isInputHeld)
+    private void InputDown(int index, HelperClass.InputType inputType, SpriteRenderer spriteRenderer, ref bool isInputHeld)
     {
-        spriteRenderer.color = color;
+        spriteRenderer.color = HelperClass.playerColors[index];
         if(isInputHeld == false)
         {
             isInputHeld = true;
-            if(color == HelperClass.red)
-                GameManager.Instance.InputPressed(index, HelperClass.InputType.Circle);
-            else if(color == HelperClass.blue)
-                GameManager.Instance.InputPressed(index, HelperClass.InputType.Square);
-            else if(color == HelperClass.green)
-                GameManager.Instance.InputPressed(index, HelperClass.InputType.Triangle);
-            else if(color == HelperClass.yellow)
-                GameManager.Instance.InputPressed(index, HelperClass.InputType.Diamond);
-            else
-                print("Function InputDown received an invalid color: " + color);
+            GameManager.Instance.InputPressed(index, inputType);
         } 
     }
-    private void InputUp(Color color, SpriteRenderer spriteRenderer, out bool isInputHeld)
+    private void InputUp(int index, SpriteRenderer spriteRenderer, out bool isInputHeld)
     {
-        spriteRenderer.color = color;
+        spriteRenderer.color = HelperClass.playerDarkColors[index];
         isInputHeld = false;
     }
 
@@ -78,10 +69,10 @@ public class PlayerManager : MonoBehaviour
         GetMarkerSpriteRenderers();
         for(int i = 0; i < circleMarkRenderers.Length; i++)
         {
-            circleMarkRenderers[i].color = HelperClass.darkRed;
-            squareMarkRenderers[i].color = HelperClass.darkBlue;
-            triangleMarkRenderers[i].color = HelperClass.darkGreen;
-            diamondMarkRenderers[i].color = HelperClass.darkYellow;
+            circleMarkRenderers[i].color = HelperClass.playerDarkColors[i];
+            squareMarkRenderers[i].color = HelperClass.playerDarkColors[i];
+            triangleMarkRenderers[i].color = HelperClass.playerDarkColors[i];
+            diamondMarkRenderers[i].color = HelperClass.playerDarkColors[i];
         }
     }
     void Update()
@@ -94,38 +85,38 @@ public class PlayerManager : MonoBehaviour
                 //CIRcLE INPUT
                 if(Input.GetKeyDown(circleKeys[i]))
                 {
-                    InputDown(i, HelperClass.red, circleMarkRenderers[i], ref isCircleHeld[i]);
+                    InputDown(i, HelperClass.InputType.Circle, circleMarkRenderers[i], ref isCircleHeld[i]);
                 }
                 else if(Input.GetKeyUp(circleKeys[i]))
                 {
-                    InputUp(HelperClass.darkRed, circleMarkRenderers[i], out isCircleHeld[i]);
+                    InputUp(i, circleMarkRenderers[i], out isCircleHeld[i]);
                 }
                 //SQUARE INPUT
                 if(Input.GetKeyDown(squareKeys[i]))
                 {
-                    InputDown(i, HelperClass.blue, squareMarkRenderers[i], ref isSquareHeld[i]);
+                    InputDown(i, HelperClass.InputType.Square, squareMarkRenderers[i], ref isSquareHeld[i]);
                 }
                 else if(Input.GetKeyUp(squareKeys[i]))
                 {
-                    InputUp(HelperClass.darkBlue, squareMarkRenderers[i], out isSquareHeld[i]);
+                    InputUp(i, squareMarkRenderers[i], out isSquareHeld[i]);
                 }
                 //TRIANGLE INPUT
                 if(Input.GetKeyDown(triangleKeys[i]))
                 {
-                    InputDown(i, HelperClass.green, triangleMarkRenderers[i], ref isTriangleHeld[i]);
+                    InputDown(i, HelperClass.InputType.Triangle, triangleMarkRenderers[i], ref isTriangleHeld[i]);
                 }
                 else if(Input.GetKeyUp(triangleKeys[i]))
                 {
-                    InputUp(HelperClass.darkGreen, triangleMarkRenderers[i], out isTriangleHeld[i]);
+                    InputUp(i, triangleMarkRenderers[i], out isTriangleHeld[i]);
                 }
                 //DIAMOND INPUT
                 if(Input.GetKeyDown(diamondKeys[i]))
                 {
-                    InputDown(i, HelperClass.yellow, diamondMarkRenderers[i], ref isDiamondHeld[i]);
+                    InputDown(i, HelperClass.InputType.Diamond, diamondMarkRenderers[i], ref isDiamondHeld[i]);
                 }
                 else if(Input.GetKeyUp(diamondKeys[i]))
                 {
-                    InputUp(HelperClass.darkYellow, diamondMarkRenderers[i], out isDiamondHeld[i]);
+                    InputUp(i, diamondMarkRenderers[i], out isDiamondHeld[i]);
                 }
             }
         }

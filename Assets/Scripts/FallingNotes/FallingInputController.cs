@@ -22,7 +22,6 @@ public class FallingInputController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = fallingInput.sprite;
-        spriteRenderer.color = fallingInput.color;
         transform.localScale = fallingInput.scaleAdjust;
         outlineRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
@@ -101,6 +100,10 @@ public class FallingInputController : MonoBehaviour
     void Start()
     {
         GetDirection();
+        if(playerNum == 0)
+            spriteRenderer.color = HelperClass.blue;
+        else
+            spriteRenderer.color = HelperClass.green;
     }
 
     void Update()

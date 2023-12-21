@@ -7,6 +7,5 @@ public class FallingInput : ScriptableObject
 {
     public string inputName;
     public Sprite sprite;
-    public Color color;
     public Vector3 scaleAdjust = new Vector3(1,1,1);
 }
