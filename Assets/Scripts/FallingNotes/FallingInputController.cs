@@ -100,10 +100,14 @@ public class FallingInputController : MonoBehaviour
     void Start()
     {
         GetDirection();
-        if(playerNum == 0)
-            spriteRenderer.color = HelperClass.blue;
-        else
-            spriteRenderer.color = HelperClass.green;
+        if(GameManager.Instance)
+        {
+            if(playerNum == 0)
+                spriteRenderer.color = HelperClass.blue;
+            else
+                spriteRenderer.color = HelperClass.green; 
+        }
+        
     }
 
     void Update()

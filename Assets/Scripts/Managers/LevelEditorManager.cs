@@ -70,6 +70,8 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        sr.enabled = true;
+        obj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
         fic.inputTime = currentTime;
         obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.circleHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         circleList.Add(obj);
@@ -81,6 +83,8 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        sr.enabled = true;
+        obj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
         fic.inputTime = currentTime;
         obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.squareHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         squareList.Add(obj);
@@ -92,6 +96,8 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        sr.enabled = true;
+        obj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
         fic.inputTime = currentTime;
         obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.triangleHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         triangleList.Add(obj);
@@ -103,6 +109,8 @@ public class LevelEditorManager : MonoBehaviour
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         FallingInputController fic = obj.GetComponent<FallingInputController>();
         sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, noteAlpha);
+        sr.enabled = true;
+        obj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
         fic.inputTime = currentTime;
         obj.transform.localPosition = new Vector2(PlayerLvEditorManager.Instance.diamondHitMarker.transform.position.x, fic.inputTime * noteSpacing);
         diamondList.Add(obj);

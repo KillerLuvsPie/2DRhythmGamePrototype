@@ -61,6 +61,11 @@ public class GameManager : MonoBehaviour
     public GameObject squareNote;
     public GameObject triangleNote;
     public GameObject diamondNote;
+    public GameObject missInputEffect;
+    public Sprite circleOutline;
+    public Sprite squareOutline;
+    public Sprite triangleOutline;
+    public Sprite diamondOutline;
 
     //BACKGROUND EFFECT VARIABLES
     public List<SpriteRenderer> bgObjects = new List<SpriteRenderer>();
@@ -367,9 +372,42 @@ public class GameManager : MonoBehaviour
         {
             ProcessNoteList(/*Index*/index, /*ListType*/inputType, /*Add score?*/false, /*How many points*/scoreDecrementIfMiss,
             /*Score multiplier*/ 1,/*Alpha change*/ missedAlpha);
+            MissedInputEffect(index, inputType);
         }
     }
 
+    private void MissedInputEffect(int index, HelperClass.InputType inputType)
+    {
+        GameObject gameObject;
+        switch(inputType)
+        {
+            case HelperClass.InputType.Circle:
+                gameObject = Instantiate(missInputEffect, circleHitMarks[index].transform.position, Quaternion.identity);
+                gameObject.GetComponent<SpriteRenderer>().sprite = circleOutline;
+                gameObject.GetComponent<SpriteRenderer>().color = HelperClass.red;
+                gameObject.transform.localScale = HelperClass.circleOutlineScale;
+                break;
+            case HelperClass.InputType.Square:
+                gameObject = Instantiate(missInputEffect, squareHitMarks[index].transform.position, Quaternion.identity);
+                gameObject.GetComponent<SpriteRenderer>().sprite = squareOutline;
+                gameObject.GetComponent<SpriteRenderer>().color = HelperClass.red;
+                gameObject.transform.localScale = HelperClass.squareOutlineScale;
+                break;
+            case HelperClass.InputType.Triangle:
+                Vector3 offset = new Vector3(0,-0.045f,0);
+                gameObject = Instantiate(missInputEffect, triangleHitMarks[index].transform.position + offset, Quaternion.identity);
+                gameObject.GetComponent<SpriteRenderer>().sprite = triangleOutline;
+                gameObject.GetComponent<SpriteRenderer>().color = HelperClass.red;
+                gameObject.transform.localScale = HelperClass.triangleOutlineScale;
+                break;
+            case HelperClass.InputType.Diamond:
+                gameObject = Instantiate(missInputEffect, diamondHitMarks[index].transform.position, Quaternion.identity);
+                gameObject.GetComponent<SpriteRenderer>().sprite = diamondOutline;
+                gameObject.GetComponent<SpriteRenderer>().color = HelperClass.red;
+                gameObject.transform.localScale = HelperClass.diamondOutlineScale;
+                break;
+        }
+    }
     //NOTE ACTIVATION FUNCTIONS
     private void ActivateNote(int index, string noteType)
     {
@@ -377,18 +415,26 @@ public class GameManager : MonoBehaviour
         {
             case "Circle":
                 circleLists[index][circleActivationIndexes[index]].GetComponent<FallingInputController>().canMove = true;
+                circleLists[index][circleActivationIndexes[index]].GetComponent<SpriteRenderer>().enabled = true;
+                circleLists[index][circleActivationIndexes[index]].transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
                 circleActivationIndexes[index]++;
                 break;
             case "Square":
                 squareLists[index][squareActivationIndexes[index]].GetComponent<FallingInputController>().canMove = true;
+                squareLists[index][squareActivationIndexes[index]].GetComponent<SpriteRenderer>().enabled = true;
+                squareLists[index][squareActivationIndexes[index]].transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
                 squareActivationIndexes[index]++;
                 break;
             case "Triangle":
                 triangleLists[index][triangleActivationIndexes[index]].GetComponent<FallingInputController>().canMove = true;
+                triangleLists[index][triangleActivationIndexes[index]].GetComponent<SpriteRenderer>().enabled = true;
+                triangleLists[index][triangleActivationIndexes[index]].transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
                 triangleActivationIndexes[index]++;
                 break;
             case "Diamond":
                 diamondLists[index][diamondActivationIndexes[index]].GetComponent<FallingInputController>().canMove = true;
+                diamondLists[index][diamondActivationIndexes[index]].GetComponent<SpriteRenderer>().enabled = true;
+                diamondLists[index][diamondActivationIndexes[index]].transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
                 diamondActivationIndexes[index]++;
                 break;
             default:

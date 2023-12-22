@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class HelperClass
@@ -8,6 +6,13 @@ public static class HelperClass
     public enum InputType {Circle, Square, Triangle, Diamond}
 
     #endregion ENUMS
+
+    #region VECTORS
+    public static Vector3 circleOutlineScale = new Vector3(0.49f, 0.49f, 0.49f);
+    public static Vector3 squareOutlineScale = new Vector3(0.49f, 0.49f, 0.49f);
+    public static Vector3 triangleOutlineScale = new Vector3(0.52f, 0.52f, 0.52f);
+    public static Vector3 diamondOutlineScale = new Vector3(0.56f, 0.56f, 0.56f);
+    #endregion VECTORS
 
     #region COLORS
     //HIT MARKER COLORS
