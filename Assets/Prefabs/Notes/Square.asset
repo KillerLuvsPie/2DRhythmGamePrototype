@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8879c5fc489fb14489035d572dceb94e, type: 3}
+  m_Name: Square
+  m_EditorClassIdentifier: 
+  inputName: Square
+  sprite: {fileID: 21300000, guid: ab535d3fe3abe5449828bc2890505379, type: 3}
+  color: {r: 0, g: 0, b: 1, a: 1}
+  scaleAdjust: {x: 1, y: 1, z: 1}
